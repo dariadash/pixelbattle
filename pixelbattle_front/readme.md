@@ -1,11 +1,10 @@
 # React Boilerplate 
 
-В данном бойлерплейте установлен и настроен webpack для продакшн, дев окружения. Стек React/Redux(toolkit)/TS.
+Данный проект использует бойлерплейт, где установлен и настроен webpack для продакшн, дев окружения. Стек React/TS.
 
 ## Используемые пакеты
 
 - React 17
-- Redux (toolkit)
 - Typescript 
 - Webpack 5
 - Babel  
