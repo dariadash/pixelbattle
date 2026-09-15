@@ -2,10 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import { Button, Icon } from '@/ui'
 import { $messageText, setMessage, startSendMessage } from '../model/private'
-import { useStore } from 'effector-react'
+import { useUnit } from 'effector-react'
 
 export const ChatForm = () => {
-    const messageText = useStore($messageText)
+    const messageText = useUnit($messageText)
     const inputRef = React.useRef<HTMLInputElement>(null)
     const handleSubmit = React.useCallback((e) => {
         e.preventDefault()

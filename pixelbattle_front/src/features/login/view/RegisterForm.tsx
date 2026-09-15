@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useStore } from 'effector-react'
+import { useUnit } from 'effector-react'
 
 import {
     $email,
@@ -22,10 +22,7 @@ import {
 } from '@/ui'
 
 export const RegisterForm = () => {
-    const username = useStore($username)
-    const email = useStore($email)
-    const password = useStore($password)
-    const loading = useStore($loading)
+    const [username, email, password, loading] = useUnit([$username, $email, $password, $loading])
 
     const handleSubmit = React.useCallback((e) => {
         e.preventDefault()

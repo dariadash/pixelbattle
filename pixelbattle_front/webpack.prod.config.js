@@ -1,7 +1,6 @@
 const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 const TerserJSPlugin = require('terser-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const baseConfig = require('./webpack.config')
 const { GenerateSW } = require('workbox-webpack-plugin')
 
@@ -19,7 +18,6 @@ module.exports = merge(baseConfig, {
     },
     plugins: [
         new webpack.optimize.ModuleConcatenationPlugin(),
-        new CleanWebpackPlugin(),
         new GenerateSW({
             clientsClaim: true,
             skipWaiting: true,

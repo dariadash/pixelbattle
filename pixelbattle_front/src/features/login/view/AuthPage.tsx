@@ -1,13 +1,13 @@
 import React from 'react'
 import { styled } from 'styled-components'
-import { useStore } from 'effector-react'
+import { useUnit } from 'effector-react'
 
 import { $settingsPage } from '../model/private'
 import { LoginForm } from './LoginForm'
 import { RegisterForm } from './RegisterForm'
 
 export const AuthPage = () => {
-    const settingsPage = useStore($settingsPage)
+    const settingsPage = useUnit($settingsPage)
     return (
         <Container>
             {settingsPage === 'login' && (

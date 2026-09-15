@@ -77,7 +77,6 @@ export class WebsocketGateway
     }
 
     afterInit() {
-        console.log('WEBSOCKET GATEWAY SERVER INIT!!!!!!!!!');
         this.server.emit('test', { do: 'stuff' });
     }
 

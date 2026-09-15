@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { IoAdapter } from '@nestjs/platform-socket.io';
@@ -13,7 +14,6 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableCors({
     credentials: true,
-    // origin: 'localhost:3000'
     origin: process.env.CLIENT_URL
   });
   app.useGlobalPipes(new ValidationPipe());

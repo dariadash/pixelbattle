@@ -1,5 +1,5 @@
 import React from 'react'
-import { useStore } from 'effector-react'
+import { useUnit } from 'effector-react'
 import styled, { css } from 'styled-components'
 
 import { $chatFontSize, $chatFont, $chatVisible, closeChat, toggleChat } from '../model'
@@ -11,10 +11,7 @@ const AUTOSCROLL_THRESHOLD_PX = 350
 
 export const Chat = () => {
     const messagesContainer = React.useRef<HTMLDivElement>(null)
-    const messages = useStore($messages)
-    const chatVisible = useStore($chatVisible)
-    const fontSize = useStore($chatFontSize)
-    const chatFont = useStore($chatFont)
+    const [messages, chatVisible, fontSize, chatFont] = useUnit([$messages, $chatVisible, $chatFontSize, $chatFont])
 
     React.useEffect(() => {
         if (messagesContainer.current) {

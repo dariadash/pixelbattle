@@ -1,7 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import * as path from 'path';
 
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -11,17 +10,11 @@ import { CategoryModule } from './category/category.module';
 import { PostModule } from './post/post.module';
 import { TokenModule } from './token/token.module';
 
-import { User } from './user/user.entity';
-import { Field } from './field/field.entity';
-import { Post } from './post/post.entity';
-import { Category } from './category/category.entity';
-import { PostCategory } from './post/post_category.entity';
-import { Token } from './token/token.entity';
-
 import { BannedUserMiddleware } from './user/banned_user.middleware';
 import { WebsocketGateway } from './websocket/websocket.gateway';
 import { UserController } from './user/user.controller';
 import { FieldController } from './field/field.controller';
+import dataSource from './data-source';
 
 @Module({
   imports: [
@@ -29,22 +22,10 @@ import { FieldController } from './field/field.controller';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => {
-        return {
-          type: 'postgres',
-          host: configService.get('DB_HOST'),
-          port: +configService.get('DB_PORT'),
-          username: configService.get('DB_USERNAME'),
-          password: configService.get('DB_PASSWORD'),
-          database: configService.get('DB_DATABASE'),
-          entities: [User, Field, Post, Category, PostCategory, Token],
-          migrations: [path.join(__dirname, 'migrations', '*.{ts,js}')],
-          synchronize: false,
-          migrationsRun: true,
-        }
-      },
-      inject: [ConfigService],
+      useFactory: () => ({
+        ...dataSource.options,
+        migrationsRun: true,
+      }),
     }),
     UserModule,
     AuthModule,

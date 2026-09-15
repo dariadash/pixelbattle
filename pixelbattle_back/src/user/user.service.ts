@@ -2,7 +2,6 @@ import { Injectable, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { genSalt, hash } from 'bcrypt';
-import { v4 } from 'uuid'
 
 import { User } from "./user.entity";
 import { CreateUserDto } from "./dto/create_user.dto";
@@ -47,7 +46,7 @@ export class UserService {
         if (candidate) {
             throw new BadRequestException(`User with email ${user.email} already exist`)
         }
-        user.activationLink = v4()
+        user.activationLink = crypto.randomUUID()
 
         const salt = await genSalt()
         user.password = await hash(user.password, salt)

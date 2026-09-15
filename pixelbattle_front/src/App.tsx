@@ -1,5 +1,5 @@
 import React from 'react'
-import { useStore } from 'effector-react'
+import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -15,9 +15,7 @@ import { toggleList } from './features/player-list/model'
 import { WhoIsOnline } from './features/player-list/view'
 
 export function App() {
-    const isAuthorized = useStore($isAuthorized)
-    const userData = useStore($userData)
-    const unseenChatMessages = useStore($unseenChatMessages)
+    const [isAuthorized, userData, unseenChatMessages] = useUnit([$isAuthorized, $userData, $unseenChatMessages])
 
     console.log(isAuthorized, '!!!!')
     console.log(userData, '!!!!2')
@@ -90,6 +88,5 @@ const ButtonsContainer = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-
     gap: 12px;
 `

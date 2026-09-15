@@ -13,9 +13,12 @@ module.exports = {
         filename: 'js/[name].[hash].js',
         chunkFilename: 'js/[id].[hash].js',
         publicPath: process.env.PUBLIC_PATH,
+        clean: true,
+        assetModuleFilename: 'assets/[name][ext]',
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
+        alias: { '@': path.resolve(__dirname, 'src') },
     },
     module: {
         rules: [
@@ -31,24 +34,15 @@ module.exports = {
                 use: ['style-loader', 'css-loader'],
             },
             {
-                test: /\.(png|jpe?g|gif)(\?.*)?$/,
-                loader: 'file-loader',
-                options: {
-                    outputPath: 'img/',
-                    name: '[name].[ext]',
-                },
+                test: /\.(png|jpe?g|gif|ico)$/i,
+                type: 'asset/resource',
+                generator: { filename: 'img/[name][ext]' },
             },
             {
-                test: /\.(eot|ttf|woff|woff2|otf|svg)$/,
-                use: [
-                    {
-                        loader: "url-loader",
-                        options: {
-                            limit: 100000,
-                            name: "./assets/fonts/[name].[ext]"
-                        }
-                    }
-                ]
+                test: /\.(eot|ttf|woff|woff2|otf|svg)$/i,
+                type: 'asset',
+                parser: { dataUrlCondition: { maxSize: 100 * 1024 } },
+                generator: { filename: 'assets/fonts/[name][ext]' },
             },
         ]
     },

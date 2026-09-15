@@ -18,7 +18,7 @@ Axios.interceptors.response.use((config) => {
     return config
 }, async (error) => {
     const originalRequest = error.config
-    if (error.responce.status == 401 && error.config && !error.config._isRetry) {
+    if (error.responce?.status == 401 && error.config && !error.config._isRetry) {
         originalRequest._isRetry = true
         try {
             const responce = await axios.get(

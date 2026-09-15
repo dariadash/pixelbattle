@@ -1,13 +1,12 @@
 import React from 'react'
-import { useStore } from 'effector-react'
+import { useUnit } from 'effector-react'
 import styled from 'styled-components'
 import { Button, Icon } from '@/ui'
 import { $playerListVisible, $players, toggleList } from '../model'
 import { UserItem } from './UserItem'
 
 export const WhoIsOnline = () => {
-    const playerListVisible = useStore($playerListVisible)
-    const players = useStore($players)
+    const [playerListVisible, players] = useUnit([$playerListVisible, $players])
     if (!playerListVisible) {
         return null
     }

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { CompactPicker } from 'react-color'
+import { CompactPicker } from 'replace-react-color'
 
 type ColorPickerProps = {
     color: any,

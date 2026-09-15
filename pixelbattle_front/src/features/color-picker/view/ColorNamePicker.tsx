@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { useStore } from 'effector-react'
+import { useUnit } from 'effector-react'
 
 import { Icon } from '@/ui'
 import { $windowVisible } from '@/features/color-picker/model/private'
@@ -9,7 +9,7 @@ import { sendNewColor } from '@/features/color-picker/model'
 
 
 export const ColorNamePicker = () => {
-  const windowVisible = useStore($windowVisible)
+  const windowVisible = useUnit($windowVisible)
 
   return (
     <>{windowVisible && (
