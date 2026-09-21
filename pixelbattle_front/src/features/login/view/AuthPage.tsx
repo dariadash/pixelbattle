@@ -1,6 +1,7 @@
 import React from 'react'
 import { styled } from 'styled-components'
 import { useUnit } from 'effector-react'
+import { themeVar } from 'igoresha-dev-ui-kit'
 
 import { $settingsPage } from '../model/private'
 import { LoginForm } from './LoginForm'
@@ -30,6 +31,6 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #00000050;
+    background-color: ${themeVar('overlayBackdrop')};
     backdrop-filter: blur(12px);
 `

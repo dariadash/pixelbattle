@@ -23,8 +23,6 @@ import { openToast } from '@/features/toasts/model/public'
 
 const TIMEOUT_IN_MS = 10000
 
-initPixels.watch(console.log)
-
 $pixels
     .on(initPixels, (_, { cols, rows }) => {
         return Array(Math.round(rows)).fill(

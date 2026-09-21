@@ -42,7 +42,6 @@ export async function checkAuth() {
             'http://localhost:3000/api/refresh',
             { withCredentials: true }
         )
-        console.log(responce)
         localStorage.setItem('token', responce.data.access_token)
 
     } catch (e: any) {

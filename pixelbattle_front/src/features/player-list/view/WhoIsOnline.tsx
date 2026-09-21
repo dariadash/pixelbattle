@@ -1,7 +1,8 @@
 import React from 'react'
 import { useUnit } from 'effector-react'
 import styled from 'styled-components'
-import { Button, Icon } from '@/ui'
+import { themeVar } from 'igoresha-dev-ui-kit'
+import { Button, ButtonsWrapper, Icon } from '@/ui'
 import { $playerListVisible, $players, toggleList } from '../model'
 import { UserItem } from './UserItem'
 
@@ -47,9 +48,10 @@ const Container = styled.div`
     left: 16px;
     bottom: 16px;
     top: 16px;
-    background-color: #00000050;
+    background-color: ${themeVar('overlayBackdrop')};
     backdrop-filter: blur(12px);
-    color: #fff;
+    color: ${themeVar('textOnAccent')};
+    border: 1px solid ${themeVar('borderSubtle')};
     padding: 16px;
     z-index: 100;
     border-radius: 18px;
@@ -57,11 +59,4 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     gap: 12px;
-`
-
-const ButtonsWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
 `

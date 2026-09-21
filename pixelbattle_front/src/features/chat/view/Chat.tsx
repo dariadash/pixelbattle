@@ -1,11 +1,12 @@
 import React from 'react'
 import { useUnit } from 'effector-react'
 import styled, { css } from 'styled-components'
+import { themeVar } from 'igoresha-dev-ui-kit'
 
 import { $chatFontSize, $chatFont, $chatVisible, closeChat, toggleChat } from '../model'
 import { $messages, } from '../model/private'
 import { ChatForm } from './ChatForm'
-import { Icon, Button } from '@/ui'
+import { Icon, Button, ButtonsWrapper } from '@/ui'
 
 const AUTOSCROLL_THRESHOLD_PX = 350
 
@@ -51,12 +52,13 @@ export const Chat = () => {
     return (
         <Container>
             <ChatWrapper>
-                <ButtonWrapper>
+                <ButtonsWrapper>
+                    <h2>Чат</h2>
                     <Button onClick={toggleChat} size='small'>
                         <Icon icon="close" />
                     </Button>
-                </ButtonWrapper>
-                <MessagesWrapper>
+                </ButtonsWrapper>
+                <div>
                     <Messages ref={messagesContainer}>
                         {messages.map(({ isMine, text, username, color }, index) => (
                             <div key={index}>
@@ -76,7 +78,7 @@ export const Chat = () => {
                         ))}
                     </Messages>
                     <ChatForm />
-                </MessagesWrapper>
+                </div>
             </ChatWrapper>
         </Container>
     )
@@ -102,9 +104,10 @@ const Container = styled.div`
 const ChatWrapper = styled.div`
     width: 360px;
     max-width: 100%;
-    background-color: #00000050;
+    background-color: ${themeVar('overlayBackdrop')};
     backdrop-filter: blur(12px);
-    color: #fff;
+    color: ${themeVar('textOnAccent')};
+    border: 1px solid ${themeVar('borderSubtle')};
     padding: 16px;
     border-radius: 18px;
 
@@ -113,28 +116,20 @@ const ChatWrapper = styled.div`
     justify-content: space-between;
 `
 
-const ButtonWrapper = styled.div`
-    display: flex;
-    justify-content: space-between;
-`
-
-const MessagesWrapper = styled.div`
-`
-
 const Messages = styled.div`
     ::-webkit-scrollbar {
         width: 20px;
     }
 
     ::-webkit-scrollbar-thumb {
-        box-shadow: inset 0 0 14px 14px #bbbbbe;
+        box-shadow: inset 0 0 14px 14px ${themeVar('scrollbarThumb')};
         border: solid 6px transparent;
         border-radius: 10px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
         border: solid 6px transparent;
-        box-shadow: inset 0 0 14px 14px #555;
+        box-shadow: inset 0 0 14px 14px ${themeVar('scrollbarThumbHover')};
     }
     overflow-y: auto;
     position: absolute;
@@ -156,8 +151,8 @@ const MessageFromMe = styled.p<StyledProps>`
     max-width: 340px;
 
     align-self: flex-end;
-    background-color: #248bf5;
-    color: #fff;
+    background-color: ${themeVar('actionSecondary')};
+    color: ${themeVar('actionSecondaryText')};
     &:after {
         content: '';
         position: absolute;
@@ -166,7 +161,7 @@ const MessageFromMe = styled.p<StyledProps>`
         width: 0;
         height: 0;
         border: 10px solid transparent;
-        border-top-color: #248bf5;
+        border-top-color: ${themeVar('actionSecondary')};
         border-bottom: 0;
         border-right: 0;
         margin-left: -5px;
@@ -196,8 +191,8 @@ const MessageFromThem = styled.p<StyledProps>`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    background-color: #e5e5ea;
-    color: #000;
+    background-color: ${themeVar('surfaceHover')};
+    color: ${themeVar('textPrimary')};
     &:after {
         content: '';
         position: absolute;
@@ -206,7 +201,7 @@ const MessageFromThem = styled.p<StyledProps>`
         width: 0;
         height: 0;
         border: 10px solid transparent;
-        border-top-color: #e5e5ea;
+        border-top-color: ${themeVar('surfaceHover')};
         border-bottom: 0;
         border-left: 0;
         margin-left: -5px;

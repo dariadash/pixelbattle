@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { useUnit } from 'effector-react'
+import { themeVar } from 'igoresha-dev-ui-kit'
 
 import { Board } from '@/features/board/view'
 import { $color, setColor } from '../model/public'
@@ -9,15 +10,6 @@ import { $drawingBlocked, $timeRemaining } from '@/features/board/model'
 
 export const Container = () => {
     const [color, drawingBlocked, timeRemaining] = useUnit([$color, $drawingBlocked, $timeRemaining])
-    const boardContainer = React.useRef<HTMLDivElement | null>(null)
-
-    React.useEffect(() => {
-        const board = boardContainer.current
-        if (!board) return
-        board.style.width = `${window.innerWidth - 20}px`
-        board.style.height = `${window.innerHeight - 150}px`
-    }, [])
-
 
     return (
         <ContainerWrapper>
@@ -29,14 +21,9 @@ export const Container = () => {
                         setColor={setColor}
                     />
                 </ColorPickerWrapper>
-                <div>
-                    Time remaining: {timeRemaining}
-                </div>
+                <p>Time remaining: {timeRemaining}</p>
             </PickerContainer>
-            <BoardContainer
-                blockcanvas={drawingBlocked}
-                ref={boardContainer}
-            >
+            <BoardContainer blockcanvas={drawingBlocked}>
                 <Board />
             </BoardContainer>
         </ContainerWrapper>
@@ -48,16 +35,17 @@ type StyledProps = {
 }
 
 const ContainerWrapper = styled.div`
-    padding-top: 10px;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, #03a9F4, #4CAF50);
+    padding: 10px;
+    height: 92vh;
+    display: flex;
+    flex-direction: column;
+    background: ${themeVar('surfaceSelected')};
+    color: ${themeVar('textPrimary')};
 `
 
 const PickerContainer = styled.div`
     text-align: center;
-    color: white;
+    color: ${themeVar('textSecondary')};
 `
 
 const ColorPickerWrapper = styled.div`
@@ -67,10 +55,10 @@ const ColorPickerWrapper = styled.div`
 `
 
 const BoardContainer = styled.div<StyledProps>`
-    margin: auto;
-    margin: 10px;
-    background: white;
-    overflow: scroll;
+    background: ${themeVar('surfaceBase')};
+    border: 1px solid ${themeVar('borderSubtle')};
+    border-radius: 12px;
+    overflow: auto;
 
     ${({ blockcanvas }) => blockcanvas && css`
         cursor: wait;

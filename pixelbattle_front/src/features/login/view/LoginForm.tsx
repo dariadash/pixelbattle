@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components'
 import { useUnit } from 'effector-react'
 
 import {
@@ -13,6 +12,8 @@ import {
 } from '../model/private'
 import {
     Button,
+    ButtonsWrapper,
+    Form,
     Icon,
     Input,
     Link,
@@ -33,47 +34,26 @@ export const LoginForm = () => {
             <Input
                 value={email}
                 placeholder={'Email'}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(text) => setEmail(text)}
             />
             <Input
                 value={password}
                 type='password'
                 placeholder={'Пароль'}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(text) => setPassword(text)}
             />
             {loading && <Loader />}
             {!loading && (
-                <ButtonWrapper>
-                    <Button blockBtn type='submit'>
+                <ButtonsWrapper>
+                    <Button type='submit'>
                         <Icon icon={'login'} />
                         Войти
                     </Button>
-                    <Link onClick={() => setSettingsPage('register')}>
+                    <Link $color="actionPrimary" $hoverColor="actionPrimaryHover" onClick={() => setSettingsPage('register')}>
                         Регистрация
                     </Link>
-                </ButtonWrapper>
+                </ButtonsWrapper>
             )}
         </Form>
     )
 }
-
-const Form = styled.form`
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    gap: 24px;
-    color: #fff;
-    max-width: 360px;
-    width: 100%;
-    padding: 20px;
-
-    background-color: #00000050;
-    backdrop-filter: blur(12px);
-`
-
-const ButtonWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-`

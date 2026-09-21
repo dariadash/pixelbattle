@@ -14,8 +14,8 @@ import { $drawingBlocked } from '../model'
 
 const TIMEOUT_IN_TICKS = 10
 const GRID_SIZE = 20
-// const CANVAS_SIZE = 10000
-const CANVAS_SIZE = 500
+const CANVAS_SIZE = 10000
+// const CANVAS_SIZE = 500
 
 export const Board = () => {
     const [drawingBlocked, pendingCanvas] = useUnit([$drawingBlocked, $processingStartCanvas])
@@ -105,6 +105,12 @@ type StyledProps = {
 }
 
 const Canvas = styled.canvas<StyledProps>`
+    flex: 0 0 auto;
+    width: ${CANVAS_SIZE}px;
+    max-width: none;
+    height: ${CANVAS_SIZE}px;
+    max-height: none;
+    image-rendering: pixelated;
     ${({ blockcanvas }) => blockcanvas && css`
         pointer-events: none;
     `}

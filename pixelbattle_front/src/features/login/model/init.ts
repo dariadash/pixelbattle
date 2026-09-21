@@ -62,7 +62,6 @@ sample({
 
 loginFx.use(async ({ email, password }) => {
     const { data } = await Axios.post('/login', { email, password })
-    console.log(data)
     return {
         access_token: data.access_token,
         refresh_token: data.refresh_token,
@@ -102,7 +101,6 @@ sample({
 })
 
 saveTokenFx.use((t) => {
-    console.log(t, '!!!!!!')
     localStorage.setItem('token', t)
     return t
 })

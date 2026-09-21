@@ -1,5 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
+import { themeVar } from 'igoresha-dev-ui-kit'
 import { CompactPicker } from 'replace-react-color'
 
 type ColorPickerProps = {
@@ -43,9 +44,9 @@ export const ColorPicker = ({ color, setColor }: ColorPickerProps) => {
 
 const Swatch = styled.div`
     padding: 5px;
-    background: #fff;
+    background: ${themeVar('surfaceBase')};
     border-radius: 1px;
-    box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+    box-shadow: 0 0 0 1px ${themeVar('shadowColor')};
     display: inline-block;
     cursor: pointer;
 `

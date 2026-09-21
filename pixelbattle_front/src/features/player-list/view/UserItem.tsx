@@ -1,5 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
+import { themeVar } from 'igoresha-dev-ui-kit'
 
 type Props = {
     name: string
@@ -32,5 +33,5 @@ const Title = styled.div`
 
 const Description = styled.div`
     font-size: 14px;
-    color: #fff;
+    color: ${themeVar('textMuted')};
 `

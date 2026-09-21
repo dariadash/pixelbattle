@@ -38,7 +38,6 @@ export class WebsocketGateway
             createdDate: new Date(),
         })
         this.server.emit('canvas-data', data);
-        console.log(data, '!!! canvas-data !!!')
     }
 
     @SubscribeMessage('message')

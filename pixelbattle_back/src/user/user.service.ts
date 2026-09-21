@@ -83,7 +83,6 @@ export class UserService {
 
     async activate(linkToActivation: string) {
         const user = await this.userRepository.findOneBy({ activationLink: linkToActivation })
-        console.log(user)
         if (!user) {
             throw new BadRequestException(`User not found`)
         }

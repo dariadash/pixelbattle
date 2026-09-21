@@ -6,10 +6,9 @@
     "noImplicitAny": false,
     "strict": true,
     "noImplicitThis": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "baseUrl": ".",
     "strictPropertyInitialization": true,
     "skipLibCheck": true,
     "paths": {

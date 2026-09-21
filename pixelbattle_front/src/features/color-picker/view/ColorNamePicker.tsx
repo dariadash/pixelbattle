@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { useUnit } from 'effector-react'
+import { themeVar } from 'igoresha-dev-ui-kit'
 
 import { Icon } from '@/ui'
 import { $windowVisible } from '@/features/color-picker/model/private'
@@ -46,11 +47,12 @@ const Container = styled.div`
 
 const Content = styled.div`
   padding: 16px;
-  color: white;
-  background-color: rgba(0,0,0,0.8);
+  color: ${themeVar('textPrimary')};
+  background-color: ${themeVar('overlayBackdrop')};
   box-sizing: border-box;
   z-index: 100;
-  box-shadow: 0 0 5px -15px rgba(0,0,0,0.9);
+  box-shadow: 0 0 5px -15px ${themeVar('shadowColor')};
+  border: 1px solid ${themeVar('borderSubtle')};
   border-radius: 12px;
   width: 100%;
   max-width: 320px;

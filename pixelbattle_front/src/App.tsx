@@ -1,13 +1,15 @@
 import React from 'react'
 import { useUnit } from 'effector-react'
 import styled from 'styled-components'
+import { themeVar } from 'igoresha-dev-ui-kit'
 import 'react-toastify/dist/ReactToastify.css'
+
+import { Button, Icon, ButtonsWrapper } from './ui'
+import { checkAuth } from './lib/axios'
 
 import { $isAuthorized, $userData, logout } from './features/login/model'
 import { AuthPage } from './features/login/view'
 import { Container } from './features/container/view'
-import { Button, Icon } from './ui'
-import { checkAuth } from './lib/axios'
 import { ColorNamePicker } from './features/color-picker/view'
 import { Chat } from './features/chat/view'
 import { $unseenChatMessages, toggleChat } from './features/chat/model'
@@ -17,29 +19,20 @@ import { WhoIsOnline } from './features/player-list/view'
 export function App() {
     const [isAuthorized, userData, unseenChatMessages] = useUnit([$isAuthorized, $userData, $unseenChatMessages])
 
-    console.log(isAuthorized, '!!!!')
-    console.log(userData, '!!!!2')
-
     React.useEffect(() => {
-        if (localStorage.getItem('token')) {
-            checkAuth()
-        }
+        if (localStorage.getItem('token')) checkAuth()
     }, [])
 
-    if (!isAuthorized) {
-        return (
-            <AuthPage />
-        )
-    }
+    if (!isAuthorized) return <AuthPage />
 
     return (
         <div>
             <Header>
                 <Icon icon='firework' size={30} />
-                <h3>
+                {/* <h3>
                     {userData.isActivated ? 'Акк подтвержден' : 'Подтвердите акк'}
-                </h3>
-                <ButtonsContainer>
+                </h3> */}
+                <ButtonsWrapper>
                     <Button onClick={toggleChat}>
                         {unseenChatMessages > 0 && <UnseenBadge>{unseenChatMessages}</UnseenBadge>}
                         <Icon size={20} icon={'chat'} />
@@ -50,7 +43,7 @@ export function App() {
                     <Button blockBtn onClick={() => logout()}>
                         Выйти
                     </Button>
-                </ButtonsContainer>
+                </ButtonsWrapper>
             </Header>
             <Chat />
             <WhoIsOnline />
@@ -61,12 +54,15 @@ export function App() {
 }
 
 const Header = styled.header`
-    padding: 10px 0;
-    width: 90%;
-    margin: auto;
+    padding: 10px 5%;
+    width: 100%;
+    margin: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: ${themeVar('overlayBackdrop')};
+    border-bottom: 1px solid ${themeVar('borderSubtle')};
+    color: ${themeVar('textPrimary')};
 `
 
 const UnseenBadge = styled.div`
@@ -81,12 +77,6 @@ const UnseenBadge = styled.div`
     margin-left: 30px;
     margin-top: -20px;
     position: absolute;
-    background-color: #e660a7;
-`
-const ButtonsContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
+    background-color: ${themeVar('actionDanger')};
+    color: ${themeVar('actionDangerText')};
 `

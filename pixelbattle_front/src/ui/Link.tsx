@@ -1,11 +1,22 @@
 import { styled } from 'styled-components'
+import { themeVar, type Theme } from 'igoresha-dev-ui-kit'
 
-export const Link = styled.div`
+type ThemeColor = keyof Theme
+
+type LinkProps = {
+    $color?: ThemeColor,
+    $hoverColor?: ThemeColor,
+}
+
+export const Link = styled.button<LinkProps>`
     font-size: 16px;
-    color: #006cd1;
+    background: none;
+    border: none;
+    padding: 0;
     cursor: pointer;
     
+    color: ${({ theme, $color }) => ($color ? theme[$color] : themeVar('actionPrimary')({ theme }))};
     &:hover {
-        color: #fff;
+        color: ${({ theme, $hoverColor }) => ($hoverColor ? theme[$hoverColor] : themeVar('actionPrimaryHover')({ theme }))};
     }
 `
