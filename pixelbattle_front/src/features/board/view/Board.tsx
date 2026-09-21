@@ -7,7 +7,6 @@ import {
     drawPixel,
     getStartCanvas,
     initPixels,
-    $processingStartCanvas,
     startCountdown
 } from '../model/private'
 import { $drawingBlocked } from '../model'
@@ -15,45 +14,41 @@ import { $drawingBlocked } from '../model'
 const TIMEOUT_IN_TICKS = 10
 const GRID_SIZE = 20
 const CANVAS_SIZE = 10000
-// const CANVAS_SIZE = 500
 
 export const Board = () => {
-    const [drawingBlocked, pendingCanvas] = useUnit([$drawingBlocked, $processingStartCanvas])
+    const [drawingBlocked] = useUnit([$drawingBlocked])
     const canvasRef = React.useRef<HTMLCanvasElement | null>(null)
     const ctxRef = React.useRef<CanvasRenderingContext2D | null>(null)
 
     const prepareCanvas = () => {
         const canvas = canvasRef.current
-        if (!canvas) {
-            return
-        }
+        if (!canvas) return
 
         canvas.width = CANVAS_SIZE
         canvas.height = CANVAS_SIZE
         canvas.style.width = `${CANVAS_SIZE}px`
         canvas.style.height = `${CANVAS_SIZE}px`
 
+        const ctx = canvas.getContext('2d')
+        if (!ctx) {
+            console.error('Canvas 2d context is not available')
+            return
+        }
+        ctx.lineCap = 'square'
+        ctxRef.current = ctx
+
         const rows = canvas.height / GRID_SIZE
         const cols = canvas.width / GRID_SIZE
 
         initPixels({ rows, cols })
-
-        const ctx = canvas.getContext('2d')
-        if (!ctx) {
-            throw new Error('ctx is null')
-        }
-        ctx.lineCap = 'square'
-        ctxRef.current = ctx
     }
 
     React.useEffect(() => {
         const unwatch = $pixels.watch((actualPixels) => {
+            const ctx = ctxRef.current
+            if (!ctx) return
             for (let row = 0; row < actualPixels.length; row++) {
                 for (let col = 0; col < actualPixels[row].length; col++) {
-                    const ctx = ctxRef.current
-                    if (!ctx) {
-                        throw new Error('ctx is null')
-                    }
                     ctx.fillStyle = actualPixels[row][col]
                     ctx.strokeStyle = actualPixels[row][col]
                     ctx.fillRect(

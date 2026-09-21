@@ -4,7 +4,7 @@ import { compare } from 'bcrypt';
 import { TokenService } from 'src/token/token.service';
 
 import { UserService } from 'src/user/user.service';
-import { jwtConstants } from './constants';
+import { getJwtSecret } from './constants';
 
 @Injectable()
 export class AuthService {
@@ -14,10 +14,10 @@ export class AuthService {
         private tokenService: TokenService
     ) { }
 
-    async signIn(email: string, pass: string) {
-        const user = await this.userService.findOne(email)
+    async signIn(username: string, pass: string) {
+        const user = await this.userService.findOneByUsername(username)
         if (!user) {
-            throw new BadRequestException('User with this email is not found')
+            throw new BadRequestException('User with this username is not found')
         }
 
         if (!await compare(pass, user?.password)) {
@@ -33,7 +33,8 @@ export class AuthService {
 
         return {
             access_token: accessToken,
-            refresh_token: refreshToken
+            refresh_token: refreshToken,
+            user: { id: user.userId, email: user.email, isActivated: user.isActivated },
         };
     }
 
@@ -46,17 +47,26 @@ export class AuthService {
         if (!refToken) {
             throw new UnauthorizedException('User is unauthorized')
         }
-        const userData = await this.jwtService.verifyAsync(
-            refToken, { secret: jwtConstants.secret }
-        );
+        let userData: any;
+        try {
+            userData = await this.jwtService.verifyAsync(
+                refToken, { secret: getJwtSecret() }
+            );
+        } catch {
+            throw new UnauthorizedException('Refresh token expired or invalid')
+        }
         const tokenFromDb = await this.tokenService.findToken(refToken)
 
         if (!userData || !tokenFromDb) {
             throw new UnauthorizedException('User is unauthorized')
         }
 
-
-        const user = await this.userService.findOneById(userData.id)
+        let user;
+        try {
+            user = await this.userService.findOneById(userData.id)
+        } catch {
+            throw new UnauthorizedException('User is unauthorized')
+        }
 
         const payload = { id: user.userId, username: user.username, status: user.status }
         const ref_payload = { id: user.userId, email: user.email, isActivated: user.isActivated }
@@ -67,7 +77,8 @@ export class AuthService {
 
         return {
             access_token: accessToken,
-            refresh_token: refreshToken
+            refresh_token: refreshToken,
+            user: { id: user.userId, email: user.email, isActivated: user.isActivated },
         };
     }
 }

@@ -18,7 +18,7 @@ import {
     startSendMessage,
     $messages,
 } from './private'
-// import { toggleList } from '../../player-list/model';
+import { toggleList } from '../../player-list/model'
 import { logout } from '../../login/model'
 import { onNewColor } from '@/features/color-picker/model'
 import { MAX_MESSAGE_LENGTH } from './const'
@@ -27,7 +27,7 @@ $chatVisible
     .on(toggleChat, (s) => !s)
     .on(openChat, () => true)
     .reset([
-        // toggleList,
+        toggleList,
         logout,
         closeChat
     ])
@@ -49,11 +49,7 @@ $unseenChatMessages
         source: $chatVisible,
         filter: (p, k) => !p && !k.isMine
     }), (p) => p + 1)
-    .reset([
-        openChat,
-        // toggleList,
-        logout
-    ])
+    .reset([openChat, logout])
 
 $messages
     .on(sendMessage, (s, p) => ([...s, {

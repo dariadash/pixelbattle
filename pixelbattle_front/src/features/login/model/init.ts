@@ -1,5 +1,5 @@
-import { forward, sample } from 'effector'
-import { Axios } from '@/lib/axios'
+import { sample } from 'effector'
+import { Axios, refreshSession } from '@/lib/axios'
 import {
     $username,
     setUsername,
@@ -8,6 +8,7 @@ import {
     $websocketPending,
     loadTokenFx,
     loginFx,
+    refreshSessionFx,
     removeTokenFx,
     saveTokenFx,
     login,
@@ -19,6 +20,7 @@ import {
     setSettingsPage
 } from './private'
 import {
+    $authChecked,
     $isAuthorized,
     $userData,
     getProfileFx,
@@ -26,42 +28,58 @@ import {
     logout,
     logoutFx,
     onSuccessConnect,
+    sessionExpired,
     setUserData,
     setWebsocketPending
 } from './public'
-import { AUTH_TOKEN } from './consts'
+import { AUTH_TOKEN, REFRESH_TOKEN } from './consts'
 import { openToast, openToastsFx } from '@/features/toasts/model/public'
 
 $username
     .on(setUsername, (_, s) => s)
+    .reset(initApp)
 
 $email
     .on(setEmail, (_, s) => s)
+    .reset(initApp)
 
 $password
     .on(setPassword, (_, s) => s)
+    .reset(initApp)
 
 $isAuthorized
     .on(loginFx.done, () => true)
-    // .on(getProfileFx.done, () => true)
     .on(registerFx.done, () => true)
+    .on(refreshSessionFx.done, () => true)
     .reset(logout)
+
+$authChecked
+    .on([refreshSessionFx.done, refreshSessionFx.fail], () => true)
+    .reset(initApp)
 
 $websocketPending
     .on(setWebsocketPending, (_, s) => s)
     .reset([logout, onSuccessConnect])
 
+$settingsPage
+    .on(setSettingsPage, (_, s) => s)
+    .on(logoutFx.done, () => 'login')
+
+$userData
+    .on(setUserData, (_, s) => s)
+    .reset(logout)
+
 sample({
     clock: login,
     source: {
-        email: $email,
+        username: $username,
         password: $password
     },
     target: loginFx
 })
 
-loginFx.use(async ({ email, password }) => {
-    const { data } = await Axios.post('/login', { email, password })
+loginFx.use(async ({ username, password }) => {
+    const { data } = await Axios.post('/login', { username, password })
     return {
         access_token: data.access_token,
         refresh_token: data.refresh_token,
@@ -79,18 +97,21 @@ sample({
     target: registerFx
 })
 
-registerFx.use(({ username, email, password }) => {
-    return Axios.post('/register', { username, email, password })
+registerFx.use(async ({ username, email, password }) => {
+    const { data } = await Axios.post('/register', { username, email, password })
+    return {
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+        user: data.user
+    }
 })
 
 sample({
     clock: [loginFx.failData, registerFx.failData],
-    fn: (err) => (
-        {
-            messages: err.response?.data.message,
-            type: 'error' as const
-        }
-    ),
+    fn: (err) => ({
+        messages: err.response?.data.message,
+        type: 'error' as const
+    }),
     target: openToastsFx
 })
 
@@ -101,8 +122,10 @@ sample({
 })
 
 saveTokenFx.use((t) => {
-    localStorage.setItem('token', t)
-    return t
+    localStorage.setItem(AUTH_TOKEN, t.access_token)
+    if (t.refresh_token) {
+        localStorage.setItem(REFRESH_TOKEN, t.refresh_token)
+    }
 })
 
 loadTokenFx.use(() => {
@@ -114,7 +137,27 @@ loadTokenFx.use(() => {
 })
 
 removeTokenFx.use(() => {
-    localStorage.removeItem('token')
+    localStorage.removeItem(AUTH_TOKEN)
+    localStorage.removeItem(REFRESH_TOKEN)
+})
+
+refreshSessionFx.use(() => refreshSession())
+
+sample({
+    clock: initApp,
+    target: refreshSessionFx,
+})
+
+sample({
+    clock: [loginFx.doneData, registerFx.doneData, refreshSessionFx.doneData],
+    fn: (data) => ({ access_token: data.access_token, refresh_token: data.refresh_token }),
+    target: saveTokenFx
+})
+
+sample({
+    clock: [loginFx.doneData, registerFx.doneData, refreshSessionFx.doneData],
+    fn: (data) => data.user,
+    target: setUserData
 })
 
 logoutFx.use(() => {
@@ -122,23 +165,8 @@ logoutFx.use(() => {
 })
 
 sample({
-    clock: initApp,
-    target: loadTokenFx,
-})
-
-sample({
-    clock: loginFx.doneData,
-    fn: (data) => data.access_token,
-    target: [saveTokenFx]
-})
-
-$userData
-    .on(setUserData, (_, s) => s)
-
-sample({
-    clock: loginFx.doneData,
-    fn: (data) => data.user,
-    target: setUserData
+    clock: sessionExpired,
+    target: logout,
 })
 
 sample({
@@ -147,11 +175,4 @@ sample({
     target: [openToast, removeTokenFx, logoutFx]
 })
 
-getProfileFx.use(() => Axios.get('/', { params: { username: $username } }))
-
-$settingsPage
-    .on(setSettingsPage, (_, s) => s)
-    // .on(loginFx.done, () => 'login')
-    // .on(registerFx.done, () => 'login')
-    .on(removeTokenFx.done, () => 'login')
-
+// getProfileFx.use(() => Axios.get('/', { params: { username: $username } }))

@@ -35,8 +35,8 @@ export class UserController {
         const userData = await this.userService.createUser(user)
         res.cookie(
             'refreshToken',
-            userData.refToken,
-            { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }
+            userData.refresh_token,
+            { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'lax' }
         )
         return res.json(userData)
     }

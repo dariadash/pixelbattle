@@ -17,8 +17,7 @@ export class FieldService {
     public currentPixels: PixelsMap
 
     private GRID_SIZE = 20
-    // private CANVAS_SIZE = 10000
-    private CANVAS_SIZE = 500
+    private CANVAS_SIZE = 10000
     private rows: number
     private cols: number
 

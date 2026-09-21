@@ -4,10 +4,9 @@ import styled from 'styled-components'
 import { themeVar } from 'igoresha-dev-ui-kit'
 import 'react-toastify/dist/ReactToastify.css'
 
-import { Button, Icon, ButtonsWrapper } from './ui'
-import { checkAuth } from './lib/axios'
+import { Button, Icon, ButtonsWrapper, Loader } from './ui'
 
-import { $isAuthorized, $userData, logout } from './features/login/model'
+import { $authChecked, $isAuthorized, initApp, logout } from './features/login/model'
 import { AuthPage } from './features/login/view'
 import { Container } from './features/container/view'
 import { ColorNamePicker } from './features/color-picker/view'
@@ -15,23 +14,22 @@ import { Chat } from './features/chat/view'
 import { $unseenChatMessages, toggleChat } from './features/chat/model'
 import { toggleList } from './features/player-list/model'
 import { WhoIsOnline } from './features/player-list/view'
+import { $loading } from './features/login/model/public'
 
 export function App() {
-    const [isAuthorized, userData, unseenChatMessages] = useUnit([$isAuthorized, $userData, $unseenChatMessages])
+    const [isAuthorized, authChecked, loading, unseenChatMessages] = useUnit([$isAuthorized, $authChecked, $loading, $unseenChatMessages])
 
     React.useEffect(() => {
-        if (localStorage.getItem('token')) checkAuth()
+        initApp()
     }, [])
 
+    if (!authChecked || loading) return <Loader />
     if (!isAuthorized) return <AuthPage />
 
     return (
         <div>
             <Header>
                 <Icon icon='firework' size={30} />
-                {/* <h3>
-                    {userData.isActivated ? 'Акк подтвержден' : 'Подтвердите акк'}
-                </h3> */}
                 <ButtonsWrapper>
                     <Button onClick={toggleChat}>
                         {unseenChatMessages > 0 && <UnseenBadge>{unseenChatMessages}</UnseenBadge>}

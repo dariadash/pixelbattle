@@ -2,6 +2,7 @@ import { Injectable, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { genSalt, hash } from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 import { User } from "./user.entity";
 import { CreateUserDto } from "./dto/create_user.dto";
@@ -14,13 +15,25 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private userRepository: Repository<User>,
-        private tokenService: TokenService
+        private tokenService: TokenService,
+        private jwtService: JwtService
     ) { }
 
     async findOne(email: string) {
         const user = await this.userRepository.createQueryBuilder('u')
             .where('email = :email', { email })
-            .select(['u.username', 'u.userId', 'u.password', 'u.email'])
+            .select(['u.username', 'u.userId', 'u.password', 'u.email', 'u.status', 'u.isActivated'])
+            .getOne();
+        if (!user) {
+            throw new BadRequestException('User not found.')
+        }
+        return user
+    }
+
+    async findOneByUsername(username: string) {
+        const user = await this.userRepository.createQueryBuilder('u')
+            .where('username = :username', { username })
+            .select(['u.username', 'u.userId', 'u.password', 'u.email', 'u.status', 'u.isActivated'])
             .getOne();
         if (!user) {
             throw new BadRequestException('User not found.')
@@ -57,8 +70,13 @@ export class UserService {
         const userDto = new RefreshTokenUserDataDto(user)
         const refreshToken = this.tokenService.generateRefreshToken({ ...userDto })
         await this.tokenService.updateRefreshToken(userDto.id, refreshToken)
+        const accessToken = await this.jwtService.signAsync({
+            id: userDto.id,
+            username: user.username,
+            status: UserStatus.REGULAR,
+        })
 
-        return { refToken: refreshToken, user: userDto }
+        return { access_token: accessToken, refresh_token: refreshToken, user: userDto }
     }
 
     async updateUser(id: string, user: CreateUserDto) {

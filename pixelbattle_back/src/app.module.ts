@@ -6,8 +6,6 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { FieldModule } from './field/field.module';
 import { WebsocketModule } from './websocket/websocket.module';
-import { CategoryModule } from './category/category.module';
-import { PostModule } from './post/post.module';
 import { TokenModule } from './token/token.module';
 
 import { BannedUserMiddleware } from './user/banned_user.middleware';
@@ -31,8 +29,6 @@ import dataSource from './data-source';
     AuthModule,
     FieldModule,
     WebsocketModule,
-    PostModule,
-    CategoryModule,
     TokenModule
   ],
 })

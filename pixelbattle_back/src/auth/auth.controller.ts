@@ -22,15 +22,16 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post('login')
     async signIn(@Body() authDto: AuthDto, @Res() res: Response) {
-        const authData = await this.authService.signIn(authDto.email, authDto.password)
+        const authData = await this.authService.signIn(authDto.username, authDto.password)
         res.cookie(
             'refreshToken',
             authData.refresh_token,
-            { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }
+            { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'lax' }
         )
         return res.json(authData)
     }
 
+    @Public()
     @Post('logout')
     async signOut(@Req() req: Request, @Res() res: Response) {
         const { refreshToken } = req.cookies
@@ -39,6 +40,7 @@ export class AuthController {
         return res.json(token)
     }
 
+    @Public()
     @Post('refresh')
     async refreshToken(@Req() req: Request, @Res() res: Response) {
         const { refreshToken } = req.cookies
@@ -46,7 +48,7 @@ export class AuthController {
         res.cookie(
             'refreshToken',
             authData.refresh_token,
-            { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }
+            { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'lax' }
         )
         return res.json(authData)
     }

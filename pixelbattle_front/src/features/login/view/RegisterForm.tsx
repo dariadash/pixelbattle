@@ -3,7 +3,6 @@ import { useUnit } from 'effector-react'
 
 import {
     $email,
-    $loading,
     $password,
     $username,
     register,
@@ -18,12 +17,11 @@ import {
     Form,
     Icon,
     Input,
-    Loader,
     Link
 } from '@/ui'
 
 export const RegisterForm = () => {
-    const [username, email, password, loading] = useUnit([$username, $email, $password, $loading])
+    const [username, email, password] = useUnit([$username, $email, $password])
 
     const handleSubmit = React.useCallback((e) => {
         e.preventDefault()
@@ -52,18 +50,15 @@ export const RegisterForm = () => {
                 onChange={(text) => setPassword(text)}
                 required
             />
-            {loading && <Loader />}
-            {!loading && (
-                <ButtonsWrapper>
-                    <Link $color="actionPrimary" $hoverColor="actionPrimaryHover" onClick={() => setSettingsPage('login')}>
-                        Войти через логин/пароль
-                    </Link>
-                    <Button type='submit'>
-                        <Icon icon={'login'} />
-                        Зарегистрироваться
-                    </Button>
-                </ButtonsWrapper>
-            )}
+            <ButtonsWrapper>
+                <Link $color="actionPrimary" $hoverColor="actionPrimaryHover" onClick={() => setSettingsPage('login')}>
+                    Войти через логин/пароль
+                </Link>
+                <Button type='submit'>
+                    <Icon icon={'login'} />
+                    Зарегистрироваться
+                </Button>
+            </ButtonsWrapper>
         </Form>
     )
 }
