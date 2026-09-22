@@ -10,14 +10,9 @@ import {
     startCountdown
 } from '../model/private'
 import { $drawingBlocked } from '../model'
+import { CANVAS_SIZE, GRID_SIZE } from '@/lib/board-constants'
 
 const TIMEOUT_IN_TICKS = 10
-const GRID_SIZE = Number(process.env.GRID_SIZE) || 20
-const CANVAS_SIZE = Number(process.env.CANVAS_SIZE) || 10000
-
-if (CANVAS_SIZE % GRID_SIZE !== 0) {
-    console.warn(`[board] CANVAS_SIZE (${CANVAS_SIZE}) is not divisible by GRID_SIZE (${GRID_SIZE}), pixel mapping may break`)
-}
 
 export const Board = () => {
     const [drawingBlocked] = useUnit([$drawingBlocked])
@@ -92,6 +87,7 @@ export const Board = () => {
 
     return (
         <Canvas
+            id='board-canvas'
             blockcanvas={drawingBlocked}
             ref={canvasRef}
             onClick={handleClick}

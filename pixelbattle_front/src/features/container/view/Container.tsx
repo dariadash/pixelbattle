@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { themeVar } from 'igoresha-dev-ui-kit'
 
 import { Board } from '@/features/board/view'
+import { Minimap } from '@/features/board-minimap/view'
 import { $color, setColor } from '../model/public'
 import { ColorPicker } from '@/ui'
 import { $drawingBlocked, $timeRemaining } from '@/features/board/model'
@@ -25,9 +26,10 @@ export const Container = () => {
                 </ColorPickerWrapper>
                 <p>{t('container.timeRemaining', { time: timeRemaining })}</p>
             </PickerContainer>
-            <BoardContainer blockcanvas={drawingBlocked}>
+            <BoardContainer id='board-scroll-container' blockcanvas={drawingBlocked}>
                 <Board />
             </BoardContainer>
+            <Minimap />
         </ContainerWrapper>
     )
 }
@@ -37,6 +39,7 @@ type StyledProps = {
 }
 
 const ContainerWrapper = styled.div`
+    position: relative;
     padding: 10px;
     height: 92vh;
     display: flex;
@@ -61,6 +64,26 @@ const BoardContainer = styled.div<StyledProps>`
     border: 1px solid ${themeVar('borderSubtle')};
     border-radius: 12px;
     overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: ${themeVar('scrollbarThumb')} transparent;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: ${themeVar('scrollbarThumb')};
+        border-radius: 8px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background: ${themeVar('scrollbarThumbHover')};
+    }
+    &::-webkit-scrollbar-corner {
+        background: transparent;
+    }
 
     ${({ blockcanvas }) => blockcanvas && css`
         cursor: wait;
