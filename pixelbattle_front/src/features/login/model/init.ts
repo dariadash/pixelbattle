@@ -23,7 +23,6 @@ import {
     $authChecked,
     $isAuthorized,
     $userData,
-    getProfileFx,
     initApp,
     logout,
     logoutFx,
@@ -174,5 +173,3 @@ sample({
     fn: () => ({ message: 'Logged out', options: { type: 'success' as const } }),
     target: [openToast, removeTokenFx, logoutFx]
 })
-
-// getProfileFx.use(() => Axios.get('/', { params: { username: $username } }))

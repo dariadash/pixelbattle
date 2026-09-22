@@ -38,20 +38,18 @@ export class TokenService {
         })
     }
 
-    async updateRefreshToken(userId: any, refreshToken: string) {
-        const tokenData = await this.tokenRepository.findOneBy({ user: userId })
+    async updateRefreshToken(userId: number, refreshToken: string) {
+        const tokenData = await this.tokenRepository.findOne({
+            where: { user: { userId } },
+        })
         if (tokenData) {
             tokenData.refreshToken = refreshToken
-            return await this.tokenRepository.update({
-                user: {
-                    userId
-                }
-            }, tokenData)
-
+            return await this.tokenRepository.save(tokenData)
         }
 
-        const refToken = this.tokenRepository.insert({ user: userId, refreshToken })
-        return refToken
+        return await this.tokenRepository.save(
+            this.tokenRepository.create({ user: { userId } as any, refreshToken })
+        )
     }
 
     async removeToken(refreshToken: string) {

@@ -1,5 +1,6 @@
 import { AUTH_TOKEN, REFRESH_TOKEN } from '@/features/login/model/consts'
 import { sessionExpired } from '@/features/login/model/public'
+import type { AuthResponse } from '@/features/login/model/interfaces'
 import axios from 'axios'
 
 export const Axios = axios.create({
@@ -20,7 +21,19 @@ const AUTH_ENDPOINTS = ['/login', '/register', '/refresh', '/logout']
 const isAuthEndpoint = (url?: string) =>
     !!url && AUTH_ENDPOINTS.some((p) => url.includes(p))
 
-let refreshPromise: Promise<{ access_token: string, refresh_token?: string }> | null = null
+let refreshPromise: Promise<AuthResponse> | null = null
+
+export async function refreshSession() {
+    refreshPromise ??= Axios.post('/refresh').then((res) => res.data).finally(() => {
+        refreshPromise = null
+    })
+    const data = await refreshPromise
+    localStorage.setItem(AUTH_TOKEN, data.access_token)
+    if (data.refresh_token) {
+        localStorage.setItem(REFRESH_TOKEN, data.refresh_token)
+    }
+    return data
+}
 
 Axios.interceptors.response.use((config) => {
     return config
@@ -31,14 +44,7 @@ Axios.interceptors.response.use((config) => {
     }
     originalRequest._isRetry = true
     try {
-        refreshPromise ??= Axios.post('/refresh').then((res) => res.data).finally(() => {
-            refreshPromise = null
-        })
-        const data = await refreshPromise
-        localStorage.setItem(AUTH_TOKEN, data.access_token)
-        if (data.refresh_token) {
-            localStorage.setItem(REFRESH_TOKEN, data.refresh_token)
-        }
+        const data = await refreshSession()
         if (originalRequest.headers) {
             originalRequest.headers.Authorization = `Bearer ${data.access_token}`
         }
@@ -48,12 +54,3 @@ Axios.interceptors.response.use((config) => {
         throw e
     }
 })
-
-export async function refreshSession() {
-    const { data } = await Axios.post('/refresh')
-    localStorage.setItem(AUTH_TOKEN, data.access_token)
-    if (data.refresh_token) {
-        localStorage.setItem(REFRESH_TOKEN, data.refresh_token)
-    }
-    return data
-}

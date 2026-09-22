@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios'
-import { createDomain, combine } from 'effector'
+import { createDomain } from 'effector'
 import { AuthResponse, LoginFxPayload, RegisterFxPayload, SaveTokenFxPayload, SettingsPage } from './interfaces'
 
 const d = createDomain()

@@ -19,5 +19,3 @@ export const $loading = combine(loginFx.pending, $websocketPending, (a, b) => a 
 
 export const onSuccessConnect = d.event()
 export const setWebsocketPending = d.event<boolean>()
-
-export const getProfileFx = d.effect<any, any, any>()

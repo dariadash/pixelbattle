@@ -1,11 +1,10 @@
+import 'dotenv/config'
 import 'reflect-metadata'
 import { DataSource, DataSourceOptions } from 'typeorm'
-import * as dotenv from 'dotenv'
 import * as path from 'path'
 import { User } from './user/user.entity'
 import { Field } from './field/field.entity'
 import { Token } from './token/token.entity'
-dotenv.config()
 
 export const dataSourceOptions: DataSourceOptions = {
     type: 'postgres',
