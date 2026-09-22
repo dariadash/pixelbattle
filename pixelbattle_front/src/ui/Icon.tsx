@@ -3,7 +3,7 @@ import React from 'react'
 import { IoSettingsOutline, IoClose } from 'react-icons/io5'
 import { BsFillChatFill, BsFillSignpostFill, BsTelegram } from 'react-icons/bs'
 import { BiColorFill, BiError, BiHelpCircle, BiLogIn, BiSend, BiTrash } from 'react-icons/bi'
-import { FaUsers } from 'react-icons/fa'
+import { FaUsers, FaCheck } from 'react-icons/fa'
 import { GiFireworkRocket } from 'react-icons/gi'
 
 const Icons = {
@@ -20,6 +20,7 @@ const Icons = {
     'login': BiLogIn,
     'help': BiHelpCircle,
     'error': BiError,
+    'check': FaCheck
 }
 
 export type IconName = keyof typeof Icons

@@ -23,6 +23,12 @@ export class WebsocketGateway
     @WebSocketServer()
     public server: Server;
 
+    private onlinePlayers = new Map<string, {
+        socketId: string,
+        name: string,
+        color: string
+    }>();
+
     @SubscribeMessage('canvas-data')
     async handleMessage(client: Socket, data: {
         id: number,
@@ -40,29 +46,23 @@ export class WebsocketGateway
         this.server.emit('canvas-data', data);
     }
 
-    @SubscribeMessage('message')
-    handleConnection(@ConnectedSocket() client: Socket, ...args: any[]) {
-        console.log(`Connected ${client.id}`, args);
-    }
-
     @SubscribeMessage('sendMessage')
-    handleChatSendMessage(@ConnectedSocket() client: Socket) {
-        this.server.on('sendMessage', async (message) => {
-            const user = await this.userService.findOneById(client.id as unknown as number)
-            client.broadcast.emit('userMessage', {
-                // username: this.worldService.players[client.id].name,
-                username: user.username,
-                text: message,
-                // color: this.worldService.players[client.id].color,
-                socketId: client.id,
-            })
+    async handleChatSendMessage(client: Socket, data: {
+        userId: number, text: string
+    }): Promise<void> {
+        const user = await this.userService.findOneById(data.userId)
+        this.server.emit('userMessage', {
+            username: user.username,
+            text: data.text,
+            color: user.usernameColor,
+            socketId: client.id,
+            isActivated: user.isActivated
         })
     }
 
     @SubscribeMessage('setColor')
     handleSetColor(@ConnectedSocket() client: Socket) {
         client.on('setColor', (newColor) => {
-            // this.worldService.players[client.id].color = newColor
             client.broadcast.emit('newColor', {
                 socketId: client.id,
                 color: newColor
@@ -70,17 +70,35 @@ export class WebsocketGateway
         })
     }
 
+    @SubscribeMessage('joinOnline')
+    async joinOnline(client: Socket, data: { userId: number }): Promise<void> {
+        const user = await this.userService.findOneById(data.userId)
+        this.onlinePlayers.set(client.id, {
+            socketId: client.id,
+            name: user.username,
+            color: user.usernameColor
+        })
+        this.server.emit('currentPlayers', [...this.onlinePlayers.values()]);
+    }
+
     @SubscribeMessage('currentPlayers')
     currentPlayersList(@ConnectedSocket() client: Socket) {
-        client.emit('currentPlayers', this.userService.findAll());
+        client.emit('currentPlayers', [...this.onlinePlayers.values()]);
+    }
+
+    @SubscribeMessage('message')
+    handleConnection(@ConnectedSocket() client: Socket, ...args: any[]) {
+        console.log(`Connected ${client.id}`, args);
+    }
+
+    handleDisconnect(@ConnectedSocket() client: Socket) {
+        console.log(`Disconnected: ${client.id}`);
+        if (this.onlinePlayers.delete(client.id)) {
+            this.server.emit('playerDisconnected', { socketId: client.id });
+        }
     }
 
     afterInit() {
         this.server.emit('test', { do: 'stuff' });
     }
-
-    handleDisconnect(@ConnectedSocket() client: Socket) {
-        console.log(`Disconnected: ${client.id}`);
-    }
-
 }

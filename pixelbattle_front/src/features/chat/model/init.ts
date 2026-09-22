@@ -3,9 +3,7 @@ import {
     $chatVisible,
     $unseenChatMessages,
     changeFont,
-    closeChat,
     onNewMessage,
-    openChat,
     sendMessage,
     setFontSize,
     $chatFont,
@@ -19,29 +17,18 @@ import {
     $messages,
 } from './private'
 import { toggleList } from '../../player-list/model'
-import { logout } from '../../login/model'
+import { $userData, logout } from '../../login/model'
 import { onNewColor } from '@/features/color-picker/model'
 import { MAX_MESSAGE_LENGTH } from './const'
+import { socket } from '@/lib/socket'
 
 $chatVisible
     .on(toggleChat, (s) => !s)
-    .on(openChat, () => true)
-    .reset([
-        toggleList,
-        logout,
-        closeChat
-    ])
+    .reset([toggleList, logout])
 
-$chatFont
-    .on(changeFont, (s) => !s)
+$chatFont.on(changeFont, (s) => !s)
 
-$chatFontSize
-    .on(setFontSize, (_, s) => {
-        if (s <= 0) {
-            return 16
-        }
-        return s
-    })
+$chatFontSize.on(setFontSize, (_, s) => s <= 0 ? 16 : s)
 
 $unseenChatMessages
     .on(sample({
@@ -49,15 +36,9 @@ $unseenChatMessages
         source: $chatVisible,
         filter: (p, k) => !p && !k.isMine
     }), (p) => p + 1)
-    .reset([openChat, logout])
+    .reset([toggleChat, logout])
 
 $messages
-    .on(sendMessage, (s, p) => ([...s, {
-        isMine: true,
-        text: p,
-        username: '',
-        color: '',
-    }]))
     .on(onNewMessage, (s, v) => ([...s, v]))
     .on(onNewColor, (s, a) => s.map((item) => {
         if (item.socketId === a.socketId) {
@@ -68,7 +49,7 @@ $messages
         }
         return { ...item }
     }))
-
+    .reset(logout)
 
 $messageText
     .on(setMessage, (_, s) => {
@@ -77,12 +58,19 @@ $messageText
         }
         return s
     })
-    .reset(sendMessage)
+    .reset([sendMessage, toggleChat, logout])
 
 
 sample({
     clock: startSendMessage,
-    source: $messageText,
-    filter: (msg) => msg.trim().length >= 1,
+    source: { msg: $messageText, user: $userData },
+    filter: ({ msg }) => msg.trim().length >= 1,
+    fn: ({ msg, user }) => ({ userId: user.id, text: msg }),
     target: sendMessage
 })
+
+sendMessage.watch(({ userId, text }) => {
+    socket.emit('sendMessage', { userId, text })
+})
+
+socket.on('userMessage', (data) => onNewMessage({ ...data, isMine: data.socketId === socket.id }))

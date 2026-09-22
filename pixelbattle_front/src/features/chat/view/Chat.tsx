@@ -3,7 +3,7 @@ import { useUnit } from 'effector-react'
 import styled, { css } from 'styled-components'
 import { themeVar } from 'igoresha-dev-ui-kit'
 
-import { $chatFontSize, $chatFont, $chatVisible, closeChat, toggleChat } from '../model'
+import { $chatFontSize, $chatFont, $chatVisible, toggleChat } from '../model'
 import { $messages, } from '../model/private'
 import { ChatForm } from './ChatForm'
 import { Icon, Button, ButtonsWrapper } from '@/ui'
@@ -60,19 +60,22 @@ export const Chat = () => {
                 </ButtonsWrapper>
                 <div>
                     <Messages ref={messagesContainer}>
-                        {messages.map(({ isMine, text, username, color }, index) => (
+                        {messages.map(({ isMine, text, username, color, isActivated }, index) => (
                             <div key={index}>
-                                {
-                                    isMine
-                                        ? <MessageFromMe size={fontSize} font={chatFont}>
-                                            {text}
-                                        </MessageFromMe>
-                                        : <MessageFromThem size={fontSize} font={chatFont}>
-                                            <Username color={color}>
-                                                {username}
-                                            </Username>
-                                            {text}
-                                        </MessageFromThem>
+                                {isMine
+                                    ? <MessageFromMe size={fontSize} font={chatFont}>
+                                        {text}
+                                    </MessageFromMe>
+                                    : <MessageFromThem size={fontSize} font={chatFont}>
+                                        <Username color={color}>
+                                            {username}
+                                            {isActivated
+                                                ? <Icon color='green' icon="check" />
+                                                : <Icon color='red' icon="close" />
+                                            }
+                                        </Username>
+                                        {text}
+                                    </MessageFromThem>
                                 }
                             </div>
                         ))}
@@ -217,6 +220,11 @@ const MessageFromThem = styled.p<StyledProps>`
 `
 
 const Username = styled.strong<StyledProps>`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2px;
+
     ${({ color }) => color && css`
         color: ${color};
     `}

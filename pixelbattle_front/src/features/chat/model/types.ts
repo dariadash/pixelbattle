@@ -4,4 +4,5 @@ export type Message = {
     text: string,
     isMine: boolean,
     color: string,
+    isActivated?: boolean
 }

@@ -10,6 +10,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "strictPropertyInitialization": true,
+    "types": ["node", "webpack-env"],
     "skipLibCheck": true,
     "paths": {
       "@/*": [

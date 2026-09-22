@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -16,8 +17,8 @@ type PixelsMap = {
 export class FieldService {
     public currentPixels: PixelsMap
 
-    private GRID_SIZE = 20
-    private CANVAS_SIZE = 10000
+    private GRID_SIZE: number
+    private CANVAS_SIZE: number
     private rows: number
     private cols: number
 
@@ -26,7 +27,16 @@ export class FieldService {
     constructor(
         @InjectRepository(Field)
         private fieldRepository: Repository<Field>,
+        private configService: ConfigService,
     ) {
+        const gridSize = Number(this.configService.get('GRID_SIZE')) || 20
+        const canvasSize = Number(this.configService.get('CANVAS_SIZE')) || 10000
+        if (canvasSize % gridSize !== 0) {
+            // eslint-disable-next-line no-console
+            console.warn(`[field] CANVAS_SIZE (${canvasSize}) is not divisible by GRID_SIZE (${gridSize}), pixel mapping may break`)
+        }
+        this.GRID_SIZE = gridSize
+        this.CANVAS_SIZE = canvasSize
         this.rows = this.CANVAS_SIZE / this.GRID_SIZE
         this.cols = this.CANVAS_SIZE / this.GRID_SIZE
         this.getAllFields().then(

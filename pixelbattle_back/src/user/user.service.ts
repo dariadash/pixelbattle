@@ -22,7 +22,7 @@ export class UserService {
     async findOne(email: string) {
         const user = await this.userRepository.createQueryBuilder('u')
             .where('email = :email', { email })
-            .select(['u.username', 'u.userId', 'u.password', 'u.email', 'u.status', 'u.isActivated'])
+            .select(['u.username', 'u.userId', 'u.password', 'u.email', 'u.status', 'u.usernameColor', 'u.isActivated'])
             .getOne();
         if (!user) {
             throw new BadRequestException('User not found.')

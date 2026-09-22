@@ -4,10 +4,16 @@ import styled from 'styled-components'
 import { themeVar } from 'igoresha-dev-ui-kit'
 import { Button, ButtonsWrapper, Icon } from '@/ui'
 import { $playerListVisible, $players, toggleList } from '../model'
+import { socket } from '@/lib/socket'
 import { UserItem } from './UserItem'
 
 export const WhoIsOnline = () => {
     const [playerListVisible, players] = useUnit([$playerListVisible, $players])
+    React.useEffect(() => {
+        if (playerListVisible) {
+            socket.emit('currentPlayers')
+        }
+    }, [playerListVisible])
     if (!playerListVisible) {
         return null
     }

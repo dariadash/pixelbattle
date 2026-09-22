@@ -6,15 +6,14 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import { Button, Icon, ButtonsWrapper, Loader } from './ui'
 
-import { $authChecked, $isAuthorized, initApp, logout } from './features/login/model'
+import { $authChecked, $isAuthorized, initApp, logout, $loading } from './features/login/model'
 import { AuthPage } from './features/login/view'
 import { Container } from './features/container/view'
 import { ColorNamePicker } from './features/color-picker/view'
-import { Chat } from './features/chat/view'
 import { $unseenChatMessages, toggleChat } from './features/chat/model'
+import { Chat } from './features/chat/view'
 import { toggleList } from './features/player-list/model'
 import { WhoIsOnline } from './features/player-list/view'
-import { $loading } from './features/login/model/public'
 
 export function App() {
     const [isAuthorized, authChecked, loading, unseenChatMessages] = useUnit([$isAuthorized, $authChecked, $loading, $unseenChatMessages])
