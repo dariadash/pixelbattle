@@ -30,7 +30,7 @@ const Switcher = styled.div`
     position: fixed;
     right: 16px;
     top: 72px;
-    z-index: 1000;
+    z-index: 100;
     display: flex;
     gap: 8px;
 `

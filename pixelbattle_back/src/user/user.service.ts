@@ -99,6 +99,16 @@ export class UserService {
         return this.userRepository.save(user);
     }
 
+    async updateUsernameColor(userId: number, color: string): Promise<User> {
+        const user = await this.userRepository.findOneBy({ userId });
+
+        if (!user) {
+            throw new BadRequestException('User not found.')
+        }
+        user.usernameColor = color;
+        return this.userRepository.save(user);
+    }
+
     async activate(linkToActivation: string) {
         const user = await this.userRepository.findOneBy({ activationLink: linkToActivation })
         if (!user) {
@@ -106,6 +116,6 @@ export class UserService {
         }
 
         user.isActivated = true;
-        await this.userRepository.save(user)
+        return this.userRepository.save(user);
     }
 }

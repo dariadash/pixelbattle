@@ -6,6 +6,7 @@ import { themeVar } from 'igoresha-dev-ui-kit'
 import { Button, ButtonsWrapper, Icon } from '@/ui'
 import { $playerListVisible, $players, toggleList } from '../model'
 import { socket } from '@/lib/socket'
+import { toggleWindow } from '@/features/color-picker/model'
 import { UserItem } from './UserItem'
 
 export const WhoIsOnline = () => {
@@ -23,9 +24,14 @@ export const WhoIsOnline = () => {
         <Container>
             <ButtonsWrapper>
                 <h2>{t('players.title')}</h2>
-                <Button onClick={toggleList} size='small'>
-                    <Icon icon="close" />
-                </Button>
+                <HeaderActions>
+                    <Button onClick={() => toggleWindow()} size='small'>
+                        <Icon icon='settings' />
+                    </Button>
+                    <Button onClick={toggleList} size='small'>
+                        <Icon icon="close" />
+                    </Button>
+                </HeaderActions>
             </ButtonsWrapper>
             <ItemsContainer>
                 {players.map((item) => (
@@ -47,6 +53,13 @@ const ItemsContainer = styled.div`
     flex-direction: column;
     display: flex;
     gap: 12px;
+`
+
+const HeaderActions = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
 `
 
 const Container = styled.div`

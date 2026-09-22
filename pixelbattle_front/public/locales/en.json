@@ -32,8 +32,8 @@
         "timeRemaining": "Time remaining: {{time}}"
     },
     "colorPicker": {
-        "title": "Color change potions",
-        "description": "Change the color of Kapi. The new color will be saved to your account, other players will see your new color."
+        "title": "Color change",
+        "description": "Change the color of username. The new color will be saved to your account, other players will see your new color."
     },
     "errors": {
         "userNotFound": "User not found",

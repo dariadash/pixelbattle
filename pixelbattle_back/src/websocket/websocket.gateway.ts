@@ -61,13 +61,20 @@ export class WebsocketGateway
     }
 
     @SubscribeMessage('setColor')
-    handleSetColor(@ConnectedSocket() client: Socket) {
-        client.on('setColor', (newColor) => {
-            client.broadcast.emit('newColor', {
-                socketId: client.id,
-                color: newColor
-            })
-        })
+    async handleSetColor(client: Socket, data: { userId: number, color: string }): Promise<void> {
+        if (!data?.userId || !data?.color) {
+            return
+        }
+        await this.userService.updateUsernameColor(data.userId, data.color)
+
+        const entry = this.onlinePlayers.get(client.id)
+        if (entry) {
+            entry.color = data.color
+        }
+        this.server.emit('newColor', {
+            socketId: client.id,
+            color: data.color
+        });
     }
 
     @SubscribeMessage('joinOnline')
