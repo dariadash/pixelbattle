@@ -1,5 +1,6 @@
 import React from 'react'
 import { useUnit } from 'effector-react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { themeVar } from 'igoresha-dev-ui-kit'
 import 'react-toastify/dist/ReactToastify.css'
@@ -15,8 +16,10 @@ import { Chat } from './features/chat/view'
 import { toggleList } from './features/player-list/model'
 import { WhoIsOnline } from './features/player-list/view'
 import { ChatSettings } from './features/chat/view/ChatSettings'
+import { LanguageSwitcher } from './features/language-switcher/view'
 
 export function App() {
+    const { t } = useTranslation()
     const [isAuthorized, authChecked, loading, unseenChatMessages] = useUnit([$isAuthorized, $authChecked, $loading, $unseenChatMessages])
 
     React.useEffect(() => {
@@ -24,7 +27,7 @@ export function App() {
     }, [])
 
     if (!authChecked || loading) return <Loader />
-    if (!isAuthorized) return <AuthPage />
+    if (!isAuthorized) return (<><AuthPage /><LanguageSwitcher /></>)
 
     return (
         <div>
@@ -39,7 +42,7 @@ export function App() {
                         <Icon size={20} icon={'users'} />
                     </Button>
                     <Button blockBtn onClick={() => logout()}>
-                        Выйти
+                        {t('common.logout')}
                     </Button>
                 </ButtonsWrapper>
             </Header>
@@ -48,6 +51,7 @@ export function App() {
             <WhoIsOnline />
             <ColorNamePicker />
             <Container />
+            <LanguageSwitcher />
         </div>
     )
 }

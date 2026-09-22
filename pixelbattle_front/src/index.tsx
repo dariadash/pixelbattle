@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { ToastContainer } from 'react-toastify'
 import { ThemeProvider, GlobalStyled as KitGlobalStyled } from 'igoresha-dev-ui-kit'
 import { App } from './App'
+import '@/lib/i18n'
 import './features/init.ts'
 import './styles/style.css'
 

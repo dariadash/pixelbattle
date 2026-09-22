@@ -1,0 +1,47 @@
+{
+    "common": {
+        "logout": "Log out",
+        "language": "Language"
+    },
+    "auth": {
+        "welcome": "Welcome",
+        "registerTitle": "Sign up",
+        "usernamePh": "Username",
+        "namePh": "Name",
+        "emailPh": "Email",
+        "passwordPh": "Password",
+        "login": "Log in",
+        "goRegister": "Sign up",
+        "goLogin": "Log in with login/password",
+        "doRegister": "Register",
+        "loggedIn": "Logged in",
+        "loggedOut": "Logged out"
+    },
+    "chat": {
+        "title": "Chat",
+        "settings": "Chat settings",
+        "fontSize": "Font size: {{size}}px",
+        "pixelFont": "Pixel font",
+        "messagePh": "Message"
+    },
+    "players": {
+        "title": "Online players"
+    },
+    "container": {
+        "selectColor": "Select color:",
+        "timeRemaining": "Time remaining: {{time}}"
+    },
+    "colorPicker": {
+        "title": "Color change potions",
+        "description": "Change the color of Kapi. The new color will be saved to your account, other players will see your new color."
+    },
+    "errors": {
+        "userNotFound": "User not found",
+        "incorrectPassword": "Incorrect password",
+        "unauthorized": "You are not authorized",
+        "refreshExpired": "Session expired, please log in again",
+        "authFailed": "Authorization failed",
+        "emailExists": "User with email {{email}} already exists",
+        "unknown": "Unknown error"
+    }
+}

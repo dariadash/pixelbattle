@@ -1,5 +1,6 @@
 import React from 'react'
 import { useUnit } from 'effector-react'
+import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import { themeVar } from 'igoresha-dev-ui-kit'
 
@@ -11,6 +12,7 @@ import { Icon, Button, ButtonsWrapper } from '@/ui'
 const AUTOSCROLL_THRESHOLD_PX = 350
 
 export const Chat = () => {
+    const { t } = useTranslation()
     const messagesContainer = React.useRef<HTMLDivElement>(null)
     const [messages, chatVisible, fontSize, chatFont] = useUnit([$messages, $chatVisible, $chatFontSize, $chatFont])
 
@@ -53,7 +55,7 @@ export const Chat = () => {
         <Container>
             <ChatWrapper>
                 <ButtonsWrapper>
-                    <h2>Чат</h2>
+                    <h2>{t('chat.title')}</h2>
                     <HeaderActions>
                         <Button onClick={() => toggleSettingsChat()} size='small'>
                             <Icon icon='settings' />

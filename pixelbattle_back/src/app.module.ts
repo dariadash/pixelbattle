@@ -38,7 +38,7 @@ export class AppModule implements NestModule {
       .apply(BannedUserMiddleware)
       .exclude(
         { path: 'register', method: RequestMethod.POST },
-        // { path: 'activate', method: RequestMethod.GET }
+        { path: 'activate/:link', method: RequestMethod.GET }
       )
       .forRoutes(UserController, FieldController, WebsocketGateway);
   }

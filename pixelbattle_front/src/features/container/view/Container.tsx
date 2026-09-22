@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { useUnit } from 'effector-react'
+import { useTranslation } from 'react-i18next'
 import { themeVar } from 'igoresha-dev-ui-kit'
 
 import { Board } from '@/features/board/view'
@@ -9,19 +10,20 @@ import { ColorPicker } from '@/ui'
 import { $drawingBlocked, $timeRemaining } from '@/features/board/model'
 
 export const Container = () => {
+    const { t } = useTranslation()
     const [color, drawingBlocked, timeRemaining] = useUnit([$color, $drawingBlocked, $timeRemaining])
 
     return (
         <ContainerWrapper>
             <PickerContainer>
                 <ColorPickerWrapper>
-                    Select color: &nbsp;
+                    {t('container.selectColor')} &nbsp;
                     <ColorPicker
                         color={color}
                         setColor={setColor}
                     />
                 </ColorPickerWrapper>
-                <p>Time remaining: {timeRemaining}</p>
+                <p>{t('container.timeRemaining', { time: timeRemaining })}</p>
             </PickerContainer>
             <BoardContainer blockcanvas={drawingBlocked}>
                 <Board />

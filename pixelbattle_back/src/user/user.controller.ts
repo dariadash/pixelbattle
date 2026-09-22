@@ -63,6 +63,6 @@ export class UserController {
     @Get('activate/:link')
     async activateEmail(@Param('link') link: string, @Res() res: Response) {
         await this.userService.activate(link)
-        return res.redirect(`${process.env.CLIENT_URL}/api`)
+        return res.redirect(`${process.env.FRONT_URL}`)
     }
 }

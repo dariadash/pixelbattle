@@ -1,5 +1,6 @@
 import React from 'react'
 import { useUnit } from 'effector-react'
+import { useTranslation } from 'react-i18next'
 
 import {
     $email,
@@ -21,6 +22,7 @@ import {
 } from '@/ui'
 
 export const RegisterForm = () => {
+    const { t } = useTranslation()
     const [username, email, password] = useUnit([$username, $email, $password])
 
     const handleSubmit = React.useCallback((e) => {
@@ -30,33 +32,33 @@ export const RegisterForm = () => {
 
     return (
         <Form onSubmit={handleSubmit}>
-            <h2>Регистрация</h2>
+            <h2>{t('auth.registerTitle')}</h2>
             <Input
                 value={username}
-                placeholder={'Имя'}
+                placeholder={t('auth.namePh')}
                 onChange={(text) => setUsername(text)}
                 required
             />
             <Input
                 value={email}
-                placeholder={'Email'}
+                placeholder={t('auth.emailPh')}
                 onChange={(text) => setEmail(text)}
                 required
             />
             <Input
                 value={password}
                 type='password'
-                placeholder={'Пароль'}
+                placeholder={t('auth.passwordPh')}
                 onChange={(text) => setPassword(text)}
                 required
             />
             <ButtonsWrapper>
                 <Link $color="actionPrimary" $hoverColor="actionPrimaryHover" onClick={() => setSettingsPage('login')}>
-                    Войти через логин/пароль
+                    {t('auth.goLogin')}
                 </Link>
                 <Button type='submit'>
                     <Icon icon={'login'} />
-                    Зарегистрироваться
+                    {t('auth.doRegister')}
                 </Button>
             </ButtonsWrapper>
         </Form>

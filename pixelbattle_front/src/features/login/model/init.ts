@@ -1,5 +1,6 @@
 import { sample } from 'effector'
 import { Axios, refreshSession } from '@/lib/axios'
+import i18n, { translateServerMessage } from '@/lib/i18n'
 import {
     $username,
     setUsername,
@@ -108,7 +109,7 @@ registerFx.use(async ({ username, email, password }) => {
 sample({
     clock: [loginFx.failData, registerFx.failData],
     fn: (err) => ({
-        messages: err.response?.data.message,
+        messages: translateServerMessage(err.response?.data?.message),
         type: 'error' as const
     }),
     target: openToastsFx
@@ -116,7 +117,7 @@ sample({
 
 sample({
     clock: loginFx.done,
-    fn: () => ({ message: 'Logged in', options: { type: 'success' as const } }),
+    fn: () => ({ message: i18n.t('auth.loggedIn'), options: { type: 'success' as const } }),
     target: openToast,
 })
 
@@ -170,6 +171,6 @@ sample({
 
 sample({
     clock: logout,
-    fn: () => ({ message: 'Logged out', options: { type: 'success' as const } }),
+    fn: () => ({ message: i18n.t('auth.loggedOut'), options: { type: 'success' as const } }),
     target: [openToast, removeTokenFx, logoutFx]
 })

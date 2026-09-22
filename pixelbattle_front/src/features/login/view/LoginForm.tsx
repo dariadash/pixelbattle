@@ -1,5 +1,6 @@
 import React from 'react'
 import { useUnit } from 'effector-react'
+import { useTranslation } from 'react-i18next'
 
 import {
     $password,
@@ -19,6 +20,7 @@ import {
 } from '@/ui'
 
 export const LoginForm = () => {
+    const { t } = useTranslation()
     const [username, password] = useUnit([$username, $password])
 
     const handleSubmit = React.useCallback((e) => {
@@ -28,25 +30,25 @@ export const LoginForm = () => {
 
     return (
         <Form onSubmit={handleSubmit}>
-            <h2>Добро пожаловать</h2>
+            <h2>{t('auth.welcome')}</h2>
             <Input
                 value={username}
-                placeholder={'Имя пользователя'}
+                placeholder={t('auth.usernamePh')}
                 onChange={(text) => setUsername(text)}
             />
             <Input
                 value={password}
                 type='password'
-                placeholder={'Пароль'}
+                placeholder={t('auth.passwordPh')}
                 onChange={(text) => setPassword(text)}
             />
             <ButtonsWrapper>
                 <Button type='submit'>
                     <Icon icon={'login'} />
-                    Войти
+                    {t('auth.login')}
                 </Button>
                 <Link $color="actionPrimary" $hoverColor="actionPrimaryHover" onClick={() => setSettingsPage('register')}>
-                    Регистрация
+                    {t('auth.goRegister')}
                 </Link>
             </ButtonsWrapper>
         </Form>

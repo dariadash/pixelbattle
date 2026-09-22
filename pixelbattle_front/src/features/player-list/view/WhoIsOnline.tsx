@@ -1,5 +1,6 @@
 import React from 'react'
 import { useUnit } from 'effector-react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { themeVar } from 'igoresha-dev-ui-kit'
 import { Button, ButtonsWrapper, Icon } from '@/ui'
@@ -8,6 +9,7 @@ import { socket } from '@/lib/socket'
 import { UserItem } from './UserItem'
 
 export const WhoIsOnline = () => {
+    const { t } = useTranslation()
     const [playerListVisible, players] = useUnit([$playerListVisible, $players])
     React.useEffect(() => {
         if (playerListVisible) {
@@ -20,7 +22,7 @@ export const WhoIsOnline = () => {
     return (
         <Container>
             <ButtonsWrapper>
-                <h2>Список игроков</h2>
+                <h2>{t('players.title')}</h2>
                 <Button onClick={toggleList} size='small'>
                     <Icon icon="close" />
                 </Button>

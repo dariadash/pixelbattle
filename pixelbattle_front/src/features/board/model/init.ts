@@ -17,6 +17,7 @@ import {
 } from './private'
 import { setPixelReducer, setPixelsReducer } from './reducers'
 import { Axios } from '@/lib/axios'
+import { translateServerMessage } from '@/lib/i18n'
 import { logout } from '@/features/login/model'
 import { $drawingBlocked, $timeRemaining } from './public'
 import { openToast } from '@/features/toasts/model/public'
@@ -63,7 +64,8 @@ sample({
 getStartCanvasFx.use(() => Axios.get('/')
     .then(response => response.data)
     .catch(error => {
-        openToast({ message: error.response.data.message, options: { type: 'error' } })
+        const [message] = translateServerMessage(error.response?.data?.message)
+        openToast({ message, options: { type: 'error' } })
         logout()
     })
 )

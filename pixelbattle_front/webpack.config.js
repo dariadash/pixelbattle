@@ -1,6 +1,7 @@
 const webpack = require('webpack')
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 const CompressionPlugin = require("compression-webpack-plugin")
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const Dotenv = require('dotenv-webpack');
@@ -54,6 +55,11 @@ module.exports = {
         new ForkTsCheckerWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: './src/index.html',
+        }),
+        new CopyPlugin({
+            patterns: [
+                { from: 'public', to: '.' },
+            ],
         }),
         new CompressionPlugin({
             test: /\.(html|css|js|gif|svg|ico|woff|ttf|eot)$/,

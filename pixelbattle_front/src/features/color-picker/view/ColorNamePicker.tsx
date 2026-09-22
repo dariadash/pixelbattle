@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { useUnit } from 'effector-react'
+import { useTranslation } from 'react-i18next'
 import { themeVar } from 'igoresha-dev-ui-kit'
 
 import { Icon } from '@/ui'
@@ -10,13 +11,14 @@ import { sendNewColor } from '@/features/color-picker/model'
 
 
 export const ColorNamePicker = () => {
+  const { t } = useTranslation()
   const windowVisible = useUnit($windowVisible)
 
   return (
     <>{windowVisible && (
       <Container>
         <Content >
-          <h3><Icon icon={'color-picker'} /> Зелья изменения цвета</h3>
+          <h3><Icon icon={'color-picker'} /> {t('colorPicker.title')}</h3>
           <SettingsColors>
             {playerColors.map((color, index) =>
               <SettingsColorItem
@@ -26,7 +28,7 @@ export const ColorNamePicker = () => {
               />
             )}
           </SettingsColors>
-          <p>Поменяйте цвет Капи. Новый цвет сохранится на вашем аккаунте, другие игроки увидят ваш новый цвет.</p>
+          <p>{t('colorPicker.description')}</p>
         </Content>
       </Container>
     )}

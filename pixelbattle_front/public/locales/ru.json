@@ -1,0 +1,47 @@
+{
+    "common": {
+        "logout": "Выйти",
+        "language": "Язык"
+    },
+    "auth": {
+        "welcome": "Добро пожаловать",
+        "registerTitle": "Регистрация",
+        "usernamePh": "Имя пользователя",
+        "namePh": "Имя",
+        "emailPh": "Email",
+        "passwordPh": "Пароль",
+        "login": "Войти",
+        "goRegister": "Регистрация",
+        "goLogin": "Войти через логин/пароль",
+        "doRegister": "Зарегистрироваться",
+        "loggedIn": "Вход выполнен",
+        "loggedOut": "Выход выполнен"
+    },
+    "chat": {
+        "title": "Чат",
+        "settings": "Настройки чата",
+        "fontSize": "Размер шрифта: {{size}}px",
+        "pixelFont": "Пиксельный шрифт",
+        "messagePh": "Сообщение"
+    },
+    "players": {
+        "title": "Список игроков"
+    },
+    "container": {
+        "selectColor": "Выберите цвет:",
+        "timeRemaining": "Осталось времени: {{time}}"
+    },
+    "colorPicker": {
+        "title": "Зелья изменения цвета",
+        "description": "Поменяйте цвет Капи. Новый цвет сохранится на вашем аккаунте, другие игроки увидят ваш новый цвет."
+    },
+    "errors": {
+        "userNotFound": "Пользователь не найден",
+        "incorrectPassword": "Неверный пароль",
+        "unauthorized": "Вы не авторизованы",
+        "refreshExpired": "Сессия истекла, войдите снова",
+        "authFailed": "Ошибка авторизации",
+        "emailExists": "Пользователь с email {{email}} уже существует",
+        "unknown": "Неизвестная ошибка"
+    }
+}

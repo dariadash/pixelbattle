@@ -1,10 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { Button, Icon, Input } from '@/ui'
 import { $messageText, setMessage, startSendMessage } from '../model/private'
 import { useUnit } from 'effector-react'
 
 export const ChatForm = () => {
+    const { t } = useTranslation()
     const messageText = useUnit($messageText)
     const inputRef = React.useRef<HTMLInputElement>(null)
     const handleSubmit = React.useCallback((e) => {
@@ -19,7 +21,7 @@ export const ChatForm = () => {
         <InputWrapper onSubmit={handleSubmit}>
             <Input
                 ref={inputRef}
-                placeholder="Message"
+                placeholder={t('chat.messagePh')}
                 value={messageText}
                 onChange={(text) => setMessage(text)}
             />

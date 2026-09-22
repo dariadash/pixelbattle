@@ -1,18 +1,20 @@
 import React from 'react'
 import { useUnit } from 'effector-react'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { Modal, Range, Switch, themeVar } from 'igoresha-dev-ui-kit'
 import { $chatFont, $chatFontSize, changeFont, setFontSize } from '../model/private'
 import { $chatSettingsVisible, toggleSettingsChat } from '../model'
 
 export const ChatSettings = () => {
+    const { t } = useTranslation()
     const [fontSize, pixelFont, visible] = useUnit([$chatFontSize, $chatFont, $chatSettingsVisible])
 
     return (
         <Modal visible={visible} onClose={() => toggleSettingsChat()} style={{ zIndex: 200 }}>
-            <SettingsTitle>Настройки чата</SettingsTitle>
+            <SettingsTitle>{t('chat.settings')}</SettingsTitle>
             <SettingRow>
-                <span>Размер шрифта: {fontSize}px</span>
+                <span>{t('chat.fontSize', { size: fontSize })}</span>
                 <Range
                     min={10}
                     max={24}
@@ -22,7 +24,7 @@ export const ChatSettings = () => {
                 />
             </SettingRow>
             <SettingRow>
-                <span>Пиксельный шрифт</span>
+                <span>{t('chat.pixelFont')}</span>
                 <Switch checked={pixelFont} onChange={() => changeFont()} />
             </SettingRow>
         </Modal>
