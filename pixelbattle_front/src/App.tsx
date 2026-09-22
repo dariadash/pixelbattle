@@ -14,6 +14,7 @@ import { $unseenChatMessages, toggleChat } from './features/chat/model'
 import { Chat } from './features/chat/view'
 import { toggleList } from './features/player-list/model'
 import { WhoIsOnline } from './features/player-list/view'
+import { ChatSettings } from './features/chat/view/ChatSettings'
 
 export function App() {
     const [isAuthorized, authChecked, loading, unseenChatMessages] = useUnit([$isAuthorized, $authChecked, $loading, $unseenChatMessages])
@@ -43,6 +44,7 @@ export function App() {
                 </ButtonsWrapper>
             </Header>
             <Chat />
+            <ChatSettings />
             <WhoIsOnline />
             <ColorNamePicker />
             <Container />

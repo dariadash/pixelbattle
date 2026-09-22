@@ -2,19 +2,21 @@ import { sample } from 'effector'
 import {
     $chatVisible,
     $unseenChatMessages,
-    changeFont,
+    $chatSettingsVisible,
     onNewMessage,
     sendMessage,
-    setFontSize,
-    $chatFont,
-    $chatFontSize,
     toggleChat,
+    toggleSettingsChat,
 } from './public'
 import {
     $messageText,
     setMessage,
     startSendMessage,
     $messages,
+    $chatFontSize,
+    $chatFont,
+    setFontSize,
+    changeFont,
 } from './private'
 import { toggleList } from '../../player-list/model'
 import { $userData, logout } from '../../login/model'
@@ -25,6 +27,10 @@ import { socket } from '@/lib/socket'
 $chatVisible
     .on(toggleChat, (s) => !s)
     .reset([toggleList, logout])
+
+$chatSettingsVisible
+    .on(toggleSettingsChat, (s) => !s)
+    .reset(logout)
 
 $chatFont.on(changeFont, (s) => !s)
 

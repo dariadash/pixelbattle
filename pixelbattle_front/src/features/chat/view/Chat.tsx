@@ -3,8 +3,8 @@ import { useUnit } from 'effector-react'
 import styled, { css } from 'styled-components'
 import { themeVar } from 'igoresha-dev-ui-kit'
 
-import { $chatFontSize, $chatFont, $chatVisible, toggleChat } from '../model'
-import { $messages, } from '../model/private'
+import { $chatVisible, toggleChat, toggleSettingsChat } from '../model'
+import { $messages, $chatFontSize, $chatFont } from '../model/private'
 import { ChatForm } from './ChatForm'
 import { Icon, Button, ButtonsWrapper } from '@/ui'
 
@@ -54,9 +54,14 @@ export const Chat = () => {
             <ChatWrapper>
                 <ButtonsWrapper>
                     <h2>Чат</h2>
-                    <Button onClick={toggleChat} size='small'>
-                        <Icon icon="close" />
-                    </Button>
+                    <HeaderActions>
+                        <Button onClick={() => toggleSettingsChat()} size='small'>
+                            <Icon icon='settings' />
+                        </Button>
+                        <Button onClick={toggleChat} size='small'>
+                            <Icon icon="close" />
+                        </Button>
+                    </HeaderActions>
                 </ButtonsWrapper>
                 <div>
                     <Messages ref={messagesContainer}>
@@ -102,6 +107,13 @@ const Container = styled.div`
     top: 16px;
     gap: 20px;
     z-index: 100;
+`
+
+const HeaderActions = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
 `
 
 const ChatWrapper = styled.div`
@@ -177,7 +189,7 @@ const MessageFromMe = styled.p<StyledProps>`
         font-size: ${size}px;
     `}
     ${({ font }) => font && css`
-        font-family: 'Pixelcyr';
+        font-family: 'DS Pixel Cyr';
         font-weight: 400;
     `}
 `
@@ -214,7 +226,7 @@ const MessageFromThem = styled.p<StyledProps>`
         font-size: ${size}px;
     `}
     ${({ font }) => font && css`
-        font-family: 'Pixelcyr';
+        font-family: 'DS Pixel Cyr';
         font-weight: 400;
     `}
 `
