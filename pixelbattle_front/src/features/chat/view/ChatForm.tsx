@@ -1,29 +1,53 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { Controller, useForm } from 'react-hook-form'
 import { Button, Icon, Input } from '@/ui'
-import { $messageText, setMessage, startSendMessage } from '../model/private'
-import { useUnit } from 'effector-react'
+import { setMessage, startSendMessage } from '../model/private'
+import { MAX_MESSAGE_LENGTH } from '../model/const'
+
+type ChatValues = {
+    message: string,
+}
 
 export const ChatForm = () => {
     const { t } = useTranslation()
-    const messageText = useUnit($messageText)
-    const inputRef = React.useRef<HTMLInputElement>(null)
-    const handleSubmit = React.useCallback((e) => {
-        e.preventDefault()
-        startSendMessage()
-    }, [])
+    const inputRef = React.useRef<HTMLInputElement | null>(null)
+    const { control, handleSubmit, reset } = useForm<ChatValues>({
+        defaultValues: { message: '' },
+    })
+
     React.useEffect(() => {
         inputRef.current?.focus()
     }, [])
 
+    const onSubmit = (data: ChatValues) => {
+        setMessage(data.message)
+        startSendMessage()
+        reset()
+    }
+
     return (
-        <InputWrapper onSubmit={handleSubmit}>
-            <Input
-                ref={inputRef}
-                placeholder={t('chat.messagePh')}
-                value={messageText}
-                onChange={(text) => setMessage(text)}
+        <InputWrapper onSubmit={handleSubmit(onSubmit)}>
+            <Controller
+                name='message'
+                control={control}
+                rules={{
+                    required: true,
+                    validate: (v) => v.trim().length >= 1,
+                    maxLength: MAX_MESSAGE_LENGTH,
+                }}
+                render={({ field }) => (
+                    <Input
+                        ref={(el) => {
+                            field.ref(el)
+                            inputRef.current = el
+                        }}
+                        placeholder={t('chat.messagePh')}
+                        value={field.value}
+                        onChange={(text) => field.onChange(text.slice(0, MAX_MESSAGE_LENGTH))}
+                    />
+                )}
             />
             <Button type='submit'>
                 <Icon icon="send" />
@@ -32,7 +56,7 @@ export const ChatForm = () => {
     )
 }
 
-const InputWrapper = styled.form`    
+const InputWrapper = styled.form`
     display: flex;
     flex-direction: row;
     justify-content: space-between;

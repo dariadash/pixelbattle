@@ -1,11 +1,8 @@
 import React from 'react'
-import { useUnit } from 'effector-react'
 import { useTranslation } from 'react-i18next'
+import { Controller, useForm } from 'react-hook-form'
 
 import {
-    $email,
-    $password,
-    $username,
     register,
     setEmail,
     setPassword,
@@ -20,37 +17,84 @@ import {
     Input,
     Link
 } from '@/ui'
+import { EMAIL_RE } from '@/lib/validation'
+
+type RegisterValues = {
+    username: string,
+    email: string,
+    password: string,
+}
 
 export const RegisterForm = () => {
     const { t } = useTranslation()
-    const [username, email, password] = useUnit([$username, $email, $password])
+    const { control, handleSubmit, formState: { errors } } = useForm<RegisterValues>({
+        defaultValues: { username: '', email: '', password: '' },
+    })
 
-    const handleSubmit = React.useCallback((e) => {
-        e.preventDefault()
+    const onSubmit = (data: RegisterValues) => {
+        setUsername(data.username)
+        setEmail(data.email)
+        setPassword(data.password)
         register()
-    }, [])
+    }
 
     return (
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit(onSubmit)}>
             <h2>{t('auth.registerTitle')}</h2>
-            <Input
-                value={username}
-                placeholder={t('auth.namePh')}
-                onChange={(text) => setUsername(text)}
-                required
+            <Controller
+                name='username'
+                control={control}
+                rules={{ required: t('validation.required') }}
+                render={({ field }) => (
+                    <Input
+                        value={field.value}
+                        placeholder={t('auth.namePh')}
+                        onChange={(text) => field.onChange(text)}
+                        onBlur={field.onBlur}
+                        ref={field.ref}
+                        hasError={!!errors.username}
+                        errorText={errors.username?.message}
+                    />
+                )}
             />
-            <Input
-                value={email}
-                placeholder={t('auth.emailPh')}
-                onChange={(text) => setEmail(text)}
-                required
+            <Controller
+                name='email'
+                control={control}
+                rules={{
+                    required: t('validation.required'),
+                    pattern: { value: EMAIL_RE, message: t('validation.email') },
+                }}
+                render={({ field }) => (
+                    <Input
+                        value={field.value}
+                        placeholder={t('auth.emailPh')}
+                        onChange={(text) => field.onChange(text)}
+                        onBlur={field.onBlur}
+                        ref={field.ref}
+                        hasError={!!errors.email}
+                        errorText={errors.email?.message}
+                    />
+                )}
             />
-            <Input
-                value={password}
-                type='password'
-                placeholder={t('auth.passwordPh')}
-                onChange={(text) => setPassword(text)}
-                required
+            <Controller
+                name='password'
+                control={control}
+                rules={{
+                    required: t('validation.required'),
+                    minLength: { value: 6, message: t('validation.minLength', { min: 6 }) },
+                }}
+                render={({ field }) => (
+                    <Input
+                        value={field.value}
+                        type='password'
+                        placeholder={t('auth.passwordPh')}
+                        onChange={(text) => field.onChange(text)}
+                        onBlur={field.onBlur}
+                        ref={field.ref}
+                        hasError={!!errors.password}
+                        errorText={errors.password?.message}
+                    />
+                )}
             />
             <ButtonsWrapper>
                 <Link $color="actionPrimary" $hoverColor="actionPrimaryHover" onClick={() => setSettingsPage('login')}>

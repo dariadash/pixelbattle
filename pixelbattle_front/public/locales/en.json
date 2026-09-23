@@ -22,7 +22,8 @@
         "settings": "Chat settings",
         "fontSize": "Font size: {{size}}px",
         "pixelFont": "Pixel font",
-        "messagePh": "Message"
+        "messagePh": "Message",
+        "slowDown": "Slow down! Please wait a couple of seconds before the next message"
     },
     "players": {
         "title": "Online players"
@@ -34,6 +35,12 @@
     "colorPicker": {
         "title": "Color change",
         "description": "Change the color of username. The new color will be saved to your account, other players will see your new color."
+    },
+    "validation": {
+        "required": "Field is required",
+        "minLength": "Minimum {{min}} characters",
+        "maxLength": "Maximum {{max}} characters",
+        "email": "Invalid email"
     },
     "errors": {
         "userNotFound": "User not found",

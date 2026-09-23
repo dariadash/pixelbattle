@@ -7,17 +7,15 @@ import {
     drawPixel,
     getStartCanvas,
     initPixels,
-    startCountdown
 } from '../model/private'
 import { $drawingBlocked } from '../model'
 import { CANVAS_SIZE, GRID_SIZE } from '@/lib/board-constants'
-
-const TIMEOUT_IN_TICKS = 10
 
 export const Board = () => {
     const [drawingBlocked] = useUnit([$drawingBlocked])
     const canvasRef = React.useRef<HTMLCanvasElement | null>(null)
     const ctxRef = React.useRef<CanvasRenderingContext2D | null>(null)
+    const prevPixelsRef = React.useRef<string[][] | null>(null)
 
     const prepareCanvas = () => {
         const canvas = canvasRef.current
@@ -46,8 +44,15 @@ export const Board = () => {
         const unwatch = $pixels.watch((actualPixels) => {
             const ctx = ctxRef.current
             if (!ctx) return
+            const prev = prevPixelsRef.current
+            const sameSize = !!prev
+                && prev.length === actualPixels.length
+                && prev[0]?.length === actualPixels[0]?.length
             for (let row = 0; row < actualPixels.length; row++) {
-                for (let col = 0; col < actualPixels[row].length; col++) {
+                for (let col = 0; col < actualPixels[row]?.length; col++) {
+                    if (sameSize && prev[row][col] === actualPixels[row][col]) {
+                        continue
+                    }
                     ctx.fillStyle = actualPixels[row][col]
                     ctx.strokeStyle = actualPixels[row][col]
                     ctx.fillRect(
@@ -58,12 +63,14 @@ export const Board = () => {
                     )
                 }
             }
+            prevPixelsRef.current = actualPixels
         })
 
         return () => {
             unwatch()
+            prevPixelsRef.current = null
         }
-    }, [ctxRef])
+    }, [])
 
     const handleClick = React.useCallback((event) => {
         const canvas = canvasRef.current
@@ -75,9 +82,13 @@ export const Board = () => {
         const y = event.clientY - rect.top
         const row = Math.floor(x / GRID_SIZE)
         const col = Math.floor(y / GRID_SIZE)
+        const rows = Math.round(canvas.width / GRID_SIZE)
+        const cols = Math.round(canvas.height / GRID_SIZE)
+        if (row < 0 || col < 0 || row >= rows || col >= cols) {
+            return
+        }
 
         drawPixel({ col, row })
-        startCountdown(TIMEOUT_IN_TICKS)
     }, [])
 
     React.useEffect(() => {

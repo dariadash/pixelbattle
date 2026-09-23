@@ -14,8 +14,9 @@ export const drawPixel = d.event<{ row: number, col: number }>()
 
 export const drawPixelWithColor = sample({
     clock: drawPixel,
-    source: $color,
-    fn: (color, { row, col }) => ({
+    source: { pixels: $pixels, color: $color },
+    filter: ({ pixels, color }, { row, col }) => pixels[row]?.[col] !== color,
+    fn: ({ color }, { row, col }) => ({
         color, row, col
     })
 })

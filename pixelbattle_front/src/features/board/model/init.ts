@@ -1,4 +1,4 @@
-import { forward, guard, sample } from 'effector'
+import { sample } from 'effector'
 import { throttle } from 'patronum'
 import { socket } from '@/lib/socket'
 import {
@@ -12,10 +12,10 @@ import {
     abortCountdown,
     startCountdown,
     tick,
-    abortTimer,
     timerFx,
 } from './private'
 import { setPixelReducer, setPixelsReducer } from './reducers'
+import { DRAW_COOLDOWN_TICKS } from './const'
 import { Axios } from '@/lib/axios'
 import { translateServerMessage } from '@/lib/i18n'
 import { logout } from '@/features/login/model'
@@ -26,9 +26,7 @@ const TIMEOUT_IN_MS = 10000
 
 $pixels
     .on(initPixels, (_, { cols, rows }) => {
-        return Array(Math.round(rows)).fill(
-            Array(Math.round(cols)).fill('#ffffff')
-        )
+        return Array.from({ length: Math.round(rows) }, () => Array(Math.round(cols)).fill('#ffffff'))
     })
     .on([drawPixelWithColor, foreignDrawPixel], setPixelReducer)
     .on(getStartCanvasFx.doneData, setPixelsReducer)
@@ -44,16 +42,18 @@ $drawingBlocked
     .on(throttledDrawPixel, () => false)
 
 
-$drawingBlocked.watch((payload) => {
-    console.info('block status', payload)
-})
-
 socket.on('canvas-data', ({ row, col, color }) => {
     foreignDrawPixel({ row, col, color })
 })
 
 drawPixelWithColor.watch(({ row, col, color }) => {
     socket.emit('canvas-data', { row, col, color })
+})
+
+sample({
+    clock: drawPixelWithColor,
+    fn: () => DRAW_COOLDOWN_TICKS,
+    target: startCountdown,
 })
 
 sample({
@@ -67,38 +67,9 @@ getStartCanvasFx.use(() => Axios.get('/')
         const [message] = translateServerMessage(error.response?.data?.message)
         openToast({ message, options: { type: 'error' } })
         logout()
+        return []
     })
 )
-
-function createCountdown({ start, abort = abortTimer, timeout = 1000 }) {
-    // tick every 1 second
-    timerFx.use(() => wait(timeout))
-    $working.on(abort, () => false).on(start, () => true)
-
-    guard({
-        source: start,
-        filter: timerFx.pending.map(is => !is),
-        target: tick,
-    })
-
-    forward({
-        from: tick,
-        to: timerFx,
-    })
-
-    const willTick = guard({
-        source: timerFx.done.map(({ params }) => params - 1),
-        filter: seconds => seconds >= 0,
-    })
-
-    guard({
-        source: willTick,
-        filter: $working,
-        target: tick,
-    })
-
-    return { tick }
-}
 
 function wait(ms) {
     return new Promise(resolve => {
@@ -106,10 +77,32 @@ function wait(ms) {
     })
 }
 
-export const countdown = createCountdown({
-    start: startCountdown,
-    abort: abortCountdown,
-})
+timerFx.use(() => wait(1000))
+
+$working
+    .on(startCountdown, () => true)
+    .on(abortCountdown, () => false)
 
 $timeRemaining
-    .on(countdown.tick, (_, s) => s)
+    .on(startCountdown, (_, seconds) => seconds)
+    .on(timerFx.done, (seconds) => Math.max(0, seconds - 1))
+
+sample({
+    clock: startCountdown,
+    target: tick,
+})
+
+sample({
+    clock: tick,
+    filter: timerFx.pending.map((pending) => !pending),
+    target: timerFx,
+})
+
+sample({
+    clock: timerFx.done,
+    source: { seconds: $timeRemaining, working: $working },
+    filter: ({ seconds, working }) => working && seconds > 0,
+    target: tick,
+})
+
+export const countdown = { tick }

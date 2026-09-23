@@ -12,6 +12,7 @@ import {
     $messageText,
     setMessage,
     startSendMessage,
+    $lastSentAt,
     $messages,
     $chatFontSize,
     $chatFont,
@@ -21,7 +22,9 @@ import {
 import { toggleList } from '../../player-list/model'
 import { $userData, logout } from '../../login/model'
 import { onNewColor } from '@/features/color-picker/model'
-import { MAX_MESSAGE_LENGTH } from './const'
+import { openToast } from '@/features/toasts/model/public'
+import i18n from '@/lib/i18n'
+import { CHAT_COOLDOWN_MS, MAX_MESSAGE_LENGTH } from './const'
 import { socket } from '@/lib/socket'
 
 $chatVisible
@@ -69,11 +72,23 @@ $messageText
 
 sample({
     clock: startSendMessage,
-    source: { msg: $messageText, user: $userData },
-    filter: ({ msg }) => msg.trim().length >= 1,
-    fn: ({ msg, user }) => ({ userId: user.id, text: msg }),
+    source: { msg: $messageText, user: $userData, lastSent: $lastSentAt },
+    filter: ({ msg, lastSent }) => msg.trim().length >= 1 && Date.now() - lastSent >= CHAT_COOLDOWN_MS,
+    fn: ({ msg, user }) => ({ userId: user.id, text: msg.trim().slice(0, MAX_MESSAGE_LENGTH) }),
     target: sendMessage
 })
+
+sample({
+    clock: startSendMessage,
+    source: { msg: $messageText, lastSent: $lastSentAt },
+    filter: ({ msg, lastSent }) => msg.trim().length >= 1 && Date.now() - lastSent < CHAT_COOLDOWN_MS,
+    fn: () => ({ message: i18n.t('chat.slowDown'), options: { type: 'error' as const } }),
+    target: openToast,
+})
+
+$lastSentAt
+    .on(sendMessage, () => Date.now())
+    .reset(logout)
 
 sendMessage.watch(({ userId, text }) => {
     socket.emit('sendMessage', { userId, text })
