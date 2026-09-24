@@ -32,7 +32,6 @@ export class FieldService {
         const gridSize = Number(this.configService.get('GRID_SIZE')) || 20
         const canvasSize = Number(this.configService.get('CANVAS_SIZE')) || 10000
         if (canvasSize % gridSize !== 0) {
-            // eslint-disable-next-line no-console
             console.warn(`[field] CANVAS_SIZE (${canvasSize}) is not divisible by GRID_SIZE (${gridSize}), pixel mapping may break`)
         }
         this.GRID_SIZE = gridSize
