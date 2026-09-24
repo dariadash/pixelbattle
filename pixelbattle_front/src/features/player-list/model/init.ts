@@ -1,16 +1,19 @@
 import { sample } from 'effector'
+
+import { socket } from '@/shared/api/socket'
 import { onNewColor } from '@/features/color-picker/model'
-import { toggleChat } from '../../chat/model'
-import { $userData, logout } from '../../login/model'
+import { toggleChat } from '@/features/chat/model'
+import { $userData, logout } from '@/features/auth/model'
+
 import {
     joinOnline,
     onDisconnectPlayer,
     onPlayersList,
     toggleList,
     $playerListVisible,
-    $players
+    $players,
+    getCurrentPlayers
 } from './public'
-import { socket } from '@/lib/socket'
 
 $playerListVisible
     .on(toggleList, (s) => !s)
@@ -44,9 +47,9 @@ joinOnline.watch((userId) => {
     socket.emit('joinOnline', { userId })
 })
 
-logout.watch(() => {
-    socket.disconnect()
-})
+getCurrentPlayers.watch(() => socket.emit('currentPlayers'))
+
+logout.watch(() => socket.disconnect())
 
 socket.on('currentPlayers', (list) => onPlayersList(list))
 socket.on('playerDisconnected', (data) => onDisconnectPlayer(data.socketId))

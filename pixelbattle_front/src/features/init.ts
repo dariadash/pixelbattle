@@ -1,7 +1,0 @@
-import './login/model/init'
-import './board/model/init'
-import './container/model/init'
-import './toasts/model/init'
-import './chat/model/init'
-import './color-picker/model/init'
-import './player-list/model/init'

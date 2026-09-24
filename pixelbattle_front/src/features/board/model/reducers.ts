@@ -1,4 +1,4 @@
-import { CANVAS_SIZE, GRID_SIZE } from '@/lib/board-constants'
+import { CANVAS_SIZE, GRID_SIZE } from '@/shared/lib/board-constants'
 
 const FALLBACK_COLOR = '#ffffff'
 

@@ -1,4 +1,12 @@
 import { sample } from 'effector'
+
+import i18n from '@/shared/lib/i18n'
+import { socket } from '@/shared/api/socket'
+import { $userData, logout } from '@/features/auth/model'
+import { onNewColor } from '@/features/color-picker/model'
+import { toggleList } from '@/features/player-list/model'
+import { openToast } from '@/features/toasts/model'
+
 import {
     $chatVisible,
     $unseenChatMessages,
@@ -7,25 +15,19 @@ import {
     sendMessage,
     toggleChat,
     toggleSettingsChat,
+    $messages,
+    $chatFontSize,
+    $chatFont,
+    setFontSize,
+    changeFont
 } from './public'
 import {
     $messageText,
     setMessage,
     startSendMessage,
     $lastSentAt,
-    $messages,
-    $chatFontSize,
-    $chatFont,
-    setFontSize,
-    changeFont,
 } from './private'
-import { toggleList } from '../../player-list/model'
-import { $userData, logout } from '../../login/model'
-import { onNewColor } from '@/features/color-picker/model'
-import { openToast } from '@/features/toasts/model/public'
-import i18n from '@/lib/i18n'
 import { CHAT_COOLDOWN_MS, MAX_MESSAGE_LENGTH } from './const'
-import { socket } from '@/lib/socket'
 
 $chatVisible
     .on(toggleChat, (s) => !s)

@@ -1,10 +1,12 @@
 import { sample } from 'effector'
-import { socket } from '@/lib/socket'
-import { $userData, logout } from '@/features/login/model'
+
+import { socket } from '@/shared/api/socket'
+import { $userData, logout } from '@/features/auth/model'
 import { toggleList } from '@/features/player-list/model'
 import { toggleChat } from '@/features/chat/model'
-import { sendNewColor, $windowVisible, sendNewColorWithId } from './private'
-import { onNewColor, toggleWindow } from './public'
+
+import { sendNewColorWithId } from './private'
+import { sendNewColor, $windowVisible, onNewColor, toggleWindow } from './public'
 
 $windowVisible
     .on(toggleWindow, (a) => !a)

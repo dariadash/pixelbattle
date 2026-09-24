@@ -2,10 +2,10 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { ToastContainer } from 'react-toastify'
 import { ThemeProvider, GlobalStyled as KitGlobalStyled } from 'igoresha-dev-ui-kit'
-import { App } from './App'
-import '@/lib/i18n'
-import './features/init.ts'
-import './styles/style.css'
+import { App } from './app/App'
+import './shared/lib/i18n'
+import './init'
+import './app/styles.css'
 
 const rootElement = document.getElementById('app')
 if (!rootElement) throw new Error('Failed to find the root element')

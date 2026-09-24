@@ -6,9 +6,9 @@ const d = createDomain()
 export const $playerListVisible = d.store(false)
 export const $players = d.store<OnlinePlayerItem[]>([])
 
-
 export const onPlayersList = d.event<OnlinePlayerItem[]>()
 export const onDisconnectPlayer = d.event<string>()
 export const joinOnline = d.event<number>()
+export const getCurrentPlayers = d.event()
 
 export const toggleList = d.event()

@@ -1,10 +1,14 @@
 import { sample } from 'effector'
 import { throttle } from 'patronum'
-import { socket } from '@/lib/socket'
+
+import { socket } from '@/shared/api/socket'
+import { Axios } from '@/shared/api/axios'
+import { translateServerMessage } from '@/shared/lib/i18n'
+import { logout } from '@/features/auth/model'
+import { openToast } from '@/features/toasts/model'
 import {
     getStartCanvas,
     getStartCanvasFx,
-    $pixels,
     initPixels,
     drawPixelWithColor,
     foreignDrawPixel,
@@ -14,13 +18,9 @@ import {
     tick,
     timerFx,
 } from './private'
+import { $pixels, $drawingBlocked, $timeRemaining } from './public'
 import { setPixelReducer, setPixelsReducer } from './reducers'
 import { DRAW_COOLDOWN_TICKS } from './const'
-import { Axios } from '@/lib/axios'
-import { translateServerMessage } from '@/lib/i18n'
-import { logout } from '@/features/login/model'
-import { $drawingBlocked, $timeRemaining } from './public'
-import { openToast } from '@/features/toasts/model/public'
 
 const TIMEOUT_IN_MS = 10000
 

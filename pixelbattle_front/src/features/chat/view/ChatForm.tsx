@@ -2,7 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { Controller, useForm } from 'react-hook-form'
-import { Button, Icon, Input } from '@/ui'
+
+import { Button, Icon, Input } from '@/shared/ui'
 import { setMessage, startSendMessage } from '../model/private'
 import { MAX_MESSAGE_LENGTH } from '../model/const'
 

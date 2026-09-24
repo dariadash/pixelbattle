@@ -2,14 +2,10 @@ import React from 'react'
 import { useUnit } from 'effector-react'
 import styled, { css } from 'styled-components'
 
-import {
-    $pixels,
-    drawPixel,
-    getStartCanvas,
-    initPixels,
-} from '../model/private'
-import { $drawingBlocked } from '../model'
-import { CANVAS_SIZE, GRID_SIZE } from '@/lib/board-constants'
+import { CANVAS_SIZE, GRID_SIZE } from '@/shared/lib/board-constants'
+
+import { drawPixel, getStartCanvas, initPixels } from '../model/private'
+import { $pixels, $drawingBlocked } from '../model/public'
 
 export const Board = () => {
     const [drawingBlocked] = useUnit([$drawingBlocked])

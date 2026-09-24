@@ -1,0 +1,7 @@
+import './features/auth/model/init'
+import './features/board/model/init'
+import './features/container/model/init'
+import './features/toasts/model/init'
+import './features/chat/model/init'
+import './features/color-picker/model/init'
+import './features/player-list/model/init'

@@ -1,6 +1,7 @@
 import { createDomain, sample } from 'effector'
 import { pending } from 'patronum/pending'
 import { $color } from '@/features/container/model'
+import { $pixels } from './public'
 
 const d = createDomain()
 
@@ -8,7 +9,6 @@ export const getStartCanvas = d.event()
 export const getStartCanvasFx = d.effect<any, any, Error>()
 export const $processingStartCanvas = pending({ effects: [getStartCanvasFx] })
 
-export const $pixels = d.store<string[][]>([])
 export const initPixels = d.event<{ rows: number, cols: number }>()
 export const drawPixel = d.event<{ row: number, col: number }>()
 
