@@ -15,7 +15,7 @@ export function Header() {
 
     return (
         <HeaderBar>
-            <Icon icon='firework' size={30} />
+            <Logo title='PixelBattle' />
             <ButtonsWrapper>
                 <Button onClick={toggleChat}>
                     {unseenChatMessages > 0 && <UnseenBadge>{unseenChatMessages}</UnseenBadge>}
@@ -44,17 +44,53 @@ const HeaderBar = styled.header`
     color: ${themeVar('textPrimary')};
 `
 
-const UnseenBadge = styled.div`
-    width: 16px;
+const Logo = styled.span`
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    flex: 0 0 auto;
+    background-color: ${themeVar('textPrimary')};
+    mask: url('painting.svg') no-repeat center / contain;
+    -webkit-mask: url('painting.svg') no-repeat center / contain;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    animation: gradient 5s ease infinite;
+
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    &:hover {
+        background: linear-gradient(-45deg, 
+            ${themeVar('actionDisabled')},
+            ${themeVar('actionSecondary')}, 
+            ${themeVar('actionPrimary')}, 
+            ${themeVar('actionDanger')}
+        );
+        background-size: 400% 400%;
+        transform: scale(1.25);
+    }
+`
+
+const UnseenBadge = styled.div`    
+    min-width: 18px;
+    height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 16px;
-    font-size: 12px;
+    font-size: 11px;
     border-radius: 16px;
-    border-width: 2px;
+    padding: 2px;
     margin-left: 30px;
-    margin-top: -20px;
+    margin-top: -30px;
     position: absolute;
     background-color: ${themeVar('actionDanger')};
     color: ${themeVar('actionDangerText')};

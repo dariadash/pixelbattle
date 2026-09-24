@@ -49,6 +49,7 @@
         "refreshExpired": "Session expired, please log in again",
         "authFailed": "Authorization failed",
         "emailExists": "User with email {{email}} already exists",
-        "unknown": "Unknown error"
+        "unknown": "Unknown error",
+        "banned": "You are banned and cannot log in"
     }
 }

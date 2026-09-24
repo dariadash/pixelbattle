@@ -47,6 +47,7 @@ const exactServerMessages: Record<string, string> = {
     'User not found': 'errors.userNotFound',
     'You are not authorized.': 'errors.unauthorized',
     'Authorization failed.': 'errors.authFailed',
+    'You are banned and not allowed to access this page.': 'errors.banned',
 }
 
 export function translateServerMessage(message: unknown): string[] {

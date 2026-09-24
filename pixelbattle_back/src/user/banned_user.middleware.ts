@@ -21,13 +21,13 @@ export class BannedUserMiddleware implements NestMiddleware {
     ) { }
     async use(req: Request, res: Response, next: NextFunction) {
         const token = req.headers.authorization
-        if (!token) return
+        if (!token) return next()
         const newToken = token.substring(7, token.length);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         const decodedJwtAccessToken: JwtPayload = this.jwtService.decode(newToken);
 
-        if (!decodedJwtAccessToken) return
+        if (!decodedJwtAccessToken) return next()
         const user = await this.userService.findOneById(Number(decodedJwtAccessToken.id))
 
         if (user.status === UserStatus.BANNED) {

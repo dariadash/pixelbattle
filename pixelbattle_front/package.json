@@ -1,7 +1,10 @@
 {
-  "name": "react-boilerplate",
-  "version": "1.0.0",
-  "description": "",
+  "name": "pixelbattle",
+  "version": "1.1.0",
+  "description": "frontend",
+  "author": "DariaS",
+  "private": true,
+  "license": "ISC",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve --mode development --config=./webpack.dev.config.js",

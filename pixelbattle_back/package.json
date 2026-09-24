@@ -1,7 +1,7 @@
 {
   "name": "pixelbattle",
-  "version": "0.0.1",
-  "description": "",
+  "version": "1.1.0",
+  "description": "backend",
   "author": "DariaS",
   "private": true,
   "license": "ISC",
@@ -26,6 +26,7 @@
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/platform-express": "^11.2.5",
     "@nestjs/platform-socket.io": "^11.2.5",
+    "@nestjs/swagger": "^11.4.7",
     "@nestjs/typeorm": "^11.0.3",
     "@nestjs/websockets": "^11.2.5",
     "@types/bcrypt": "^6.0.0",

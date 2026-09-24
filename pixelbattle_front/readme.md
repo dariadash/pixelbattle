@@ -4,7 +4,7 @@
 
 ## Используемые пакеты
 
-- React 17
+- React 19
 - Typescript 
 - Webpack 5
 - Babel  

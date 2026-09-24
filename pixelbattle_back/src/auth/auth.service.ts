@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
 import { TokenService } from 'src/token/token.service';
 
 import { UserService } from 'src/user/user.service';
+import { UserStatus } from 'src/user/types';
 import { getJwtSecret } from './constants';
 
 @Injectable()
@@ -24,6 +25,10 @@ export class AuthService {
             throw new BadRequestException('Incorrect password')
         }
 
+        if (user.status === UserStatus.BANNED) {
+            throw new ForbiddenException('You are banned and not allowed to access this page.')
+        }
+
         const payload = { id: user.userId, username: user.username, status: user.status }
         const ref_payload = { id: user.userId, email: user.email, isActivated: user.isActivated }
 
@@ -39,6 +44,9 @@ export class AuthService {
     }
 
     async signOut(refToken: string) {
+        if (!refToken) {
+            return { deleted: false }
+        }
         const token = await this.tokenService.removeToken(refToken)
         return token
     }
